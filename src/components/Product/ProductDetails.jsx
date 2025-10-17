@@ -1,0 +1,103 @@
+import React from "react";
+import { CiHeart } from "react-icons/ci";
+import clsx from "clsx";
+
+const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
+  if (!product) return null;
+
+  // Extract unique values for each attribute index
+  const attributeValues = (product.attributes || []).map((_, index) => {
+    const values = [
+      ...new Set((product.variants || []).map((v) => v.options[index])),
+    ];
+    return values;
+  });
+
+  return (
+    <div className="w-3/4 p-2 grid grid-cols-1 gap-10">
+      {/* === Top Section === */}
+      <div className="flex items-start justify-between">
+        <div className="w-8/12 flex flex-col">
+          <h1 className="font-michroma text-xl">{product?.title}</h1>
+          <h1 className="font-semibold text-lg">₹{selectedVariant?.sellPrice}.00</h1>
+          <span className="text-sm font-extralight">
+            MRP inclusive of all taxes
+          </span>
+        </div>
+        <div className="w-4/12 text-2xl flex items-center justify-center">
+          <CiHeart className="cursor-pointer" />
+        </div>
+      </div>
+
+      {/* === Attributes Section === */}
+      <div className="flex flex-col gap-6">
+        {(product.attributes || []).map((attr, attrIndex) => (
+          <div key={attr} className="flex flex-col gap-2">
+            <span className="uppercase font-extralight">
+              {attr}: {selectedVariant?.options?.[attrIndex] ?? "-"}
+            </span>
+            <div className="flex gap-2 flex-wrap w-full">
+              {attributeValues[attrIndex].map((value) => {
+                const isActive =
+                  selectedVariant &&
+                  selectedVariant.options[attrIndex] === value;
+
+                const isColor = String(attr).toLowerCase() === "color";
+
+                // find a variant that has this attribute value (used for image preview)
+                const variantForValue = (product.variants || []).find(
+                  (v) => v.options[attrIndex] === value
+                );
+
+                // safe image src (supports both string and object media shapes)
+                const imgSrc =
+                  variantForValue?.variantMedias?.[0]?.url ||
+                  variantForValue?.variantMedias?.[0] ||
+                  "";
+
+                return (
+                  <button
+                    key={value}
+                    onClick={() => {
+                      const newVariant = (product.variants || []).find((v) =>
+                        v.options.every((opt, i) =>
+                          i === attrIndex
+                            ? opt === value
+                            : opt === selectedVariant?.options?.[i]
+                        )
+                      );
+                      if (newVariant) onSelectVariant(newVariant);
+                    }}
+                    className={clsx(
+                      "border border-gray-400 text-sm  w-2/12 items-center justify-center uppercase transition-all flex",
+                      { "": isColor, "h-[50px]": !isColor },
+                      isActive
+                        ? "bg-black text-white border-black"
+                        : "hover:bg-gray-100"
+                    )}
+                  >
+                    {isColor ? (
+                      imgSrc ? (
+                        <img
+                          src={imgSrc}
+                          alt={String(value)}
+                          className="object-cover w-full h-full"
+                        />
+                      ) : (
+                        <span className="text-xs">{value}</span>
+                      )
+                    ) : (
+                      <span>{value}</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ProductDetails;
