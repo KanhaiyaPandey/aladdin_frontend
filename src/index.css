@@ -5,13 +5,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
 @font-face {
-  font-family: 'Michroma';
-  src: url('/src/assets/fonts/Michroma.ttf') format('truetype');
+  font-family: 'Slussen-Regular-TRIAL'; 
+  src: url('/fonts/Slussen-Regular-TRIAL.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
 }
+
+
 
 @font-face {
   font-family: 'Michroma';
@@ -24,15 +25,14 @@
   font-family: 'Michroma', sans-serif;
 }
 
-.font-body {
-  font-family: 'Inter', sans-serif;
+
+@theme {
+  --font-slussen: 'Slussen-Regular', sans-serif;
 }
 
-/* html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-} */
+/* Optional: set as default body font */
+
+
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

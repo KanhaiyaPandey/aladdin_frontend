@@ -14,13 +14,13 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
   });
 
   return (
-    <div className="w-3/4 p-2 grid grid-cols-1 gap-10">
+    <div className="w-3/4 p-2 grid grid-cols-1 gap-10 font-slussen">
       {/* === Top Section === */}
       <div className="flex items-start justify-between">
         <div className="w-8/12 flex flex-col">
-          <h1 className="font-michroma text-xl">{product?.title}</h1>
-          <h1 className="font-semibold text-lg">₹{selectedVariant?.sellPrice}.00</h1>
-          <span className="text-sm font-extralight">
+          <h1 className=" text-xl font-medium uppercase">{product?.title}</h1>
+          <h1 className="font-semibold">₹{selectedVariant?.sellPrice}.00</h1>
+          <span className="text-sm font-thin">
             MRP inclusive of all taxes
           </span>
         </div>
@@ -52,7 +52,7 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                 // safe image src (supports both string and object media shapes)
                 const imgSrc =
                   variantForValue?.variantMedias?.[0]?.url ||
-                  variantForValue?.variantMedias?.[0] ||
+                  variantForValue?.variantMedias?.[0] || product?.productMedias?.[0]?.url
                   "";
 
                 return (
@@ -84,7 +84,7 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                           className="object-cover w-full h-full"
                         />
                       ) : (
-                        <span className="text-xs">{value}</span>
+                        <span className="text-xs text-center h-[100px] fle">{value}</span>
                       )
                     ) : (
                       <span>{value}</span>

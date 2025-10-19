@@ -31,10 +31,10 @@ const Products = ({ fadeInVariant, categories }) => {
 
      <div className=" w-full flex flex-col items-center justify-center">
 
-      <h2 className="text-center text-2xl font-medium mb-4 uppercase tracking-wider">
+      <h2 className="text-center text-2xl font-medium mb-2 uppercase tracking-wider">
         Winter Collections
       </h2>
-      <p className="text-center w-1/6 mb-10 text-sm font-body  text-gray-600">
+      <p className="text-center w-1/6 mb-10 text-sm font-body  text-gray-600 font-slussen font-light">
         Let us love winter, for it is the spring of genius.
       </p>
 

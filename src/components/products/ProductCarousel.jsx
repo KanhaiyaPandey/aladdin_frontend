@@ -23,7 +23,7 @@ const ProductCarousel = ({ products, categories }) => {
 
   return (
 
-    <div className=" w-full grid grid-cols-1 gap-y-1 items-center justify-start font-body">
+    <div className=" w-full grid grid-cols-1 gap-y-1 items-center justify-start font-body font-slussen">
           <div className=" flex gap-2">
              {categories.map((category) => (
                 <button
