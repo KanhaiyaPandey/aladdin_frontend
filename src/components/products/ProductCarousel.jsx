@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const ProductCarousel = ({ products, categories }) => {
   const [imageIndexes, setImageIndexes] = useState({});
   const [directions, setDirections] = useState({});
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleImageChange = (productId, direction, medias) => {
     setDirections((prev) => ({ ...prev, [productId]: direction }));
@@ -78,7 +79,7 @@ const ProductCarousel = ({ products, categories }) => {
                     ease: "easeInOut",
                   }}
                   className="object-cover w-full h-full absolute top-0 left-0 cursor-pointer"
-                  onClick={() => navigate(
+                  onClick={() => router.push(
                         product.variants.length > 0
                       ? `/product/${product.productId}?variantid=${product.variants[0].variantId}`
                       : `/product/${product.productId}`
@@ -115,7 +116,7 @@ const ProductCarousel = ({ products, categories }) => {
 
             <Link
               className="mt-2 text-start flex flex-col gap-1 cursor-pointer"
-              to={
+              href={
                     product.variants.length > 0
                       ? `/product/${product.productId}?variantid=${product.variants[0].variantId}`
                       : `/product/${product.productId}`

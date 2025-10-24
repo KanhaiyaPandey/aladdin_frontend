@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { publicFetch } from "../../utils/helpers";
 import Masonry from "../Masonry";
 import TiltedCard from "../TiltedCard";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 // Recursive function to flatten all nested subcategories
 
@@ -41,7 +41,7 @@ const Categories = ({ categories }) => {
     <div className=" px-4 py-2 grid grid-cols-2 gap-2">
 
         {categories.slice(0,3).map((category) => (
-          <Link key={category._id} className=" w-full  relative" to={`/category/${category?.categoryId}`}>
+          <Link key={category._id} className=" w-full  relative" href={`/category/${category?.categoryId}`}>
             <img src={category?.banner} alt="" className=" h-full w-full object-cover" />
           </Link>
         ))}

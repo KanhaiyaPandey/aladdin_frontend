@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 // use your own icon import if react-icons is not available
 import { LiaAtomSolid } from "react-icons/lia";
 import { motion } from "framer-motion";
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 
 const CardNav = ({
@@ -165,14 +165,14 @@ const CardNav = ({
             />
           </div>
 
-          <div className="flex gap-3 lg:flex hidden">
+          <div className="hidden lg:flex gap-3">
             {categories.map((category) => (
               <div
                 key={category?.categoryId}
                 className="md:inline-flex flex-col items-center text-xs font-medium h-full text-center relative"
               >
                 <Link
-                  to={`/category/${category?.slug}`}
+                  href={`/category/${category?.slug}`}
                   className="relative py-1"
                 >
                   {category?.title}
@@ -195,7 +195,7 @@ const CardNav = ({
           </div>
 
 
-          <div  className="card-nav-cta-button hidden lg:inline-flex gap-5  text-center flex items-center rounded-[calc(0.75rem-0.2rem)] px-4 h-full font-medium  transition-colors duration-300">
+          <div  className="card-nav-cta-button hidden lg:flex gap-5  text-center items-center rounded-[calc(0.75rem-0.2rem)] px-4 h-full font-medium  transition-colors duration-300">
             <a
                href='/about'
               type="button"
