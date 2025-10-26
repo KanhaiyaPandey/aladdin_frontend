@@ -35,15 +35,19 @@ export default function ProductPageClient({
   }
 
   return (
+    // full viewport container so left column's scrolling is isolated
     <div className="w-full flex flex-col items-center justify-center font-body">
-      <div className="w-full flex h-auto items-start justify-center relative">
-        {/* Left Side: Scrollable */}
-        <div className="w-1/2 h-[200vh] overflow-y-auto hide-scrollbar">
+      <div className="w-full flex h-screen items-start justify-center relative">
+        {/* Left Side: Scrollable (confined to viewport) */}
+        <div
+          className="w-1/2 h-full overflow-y-auto hide-scrollbar scroll-smooth"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
           <ProductImages medias={medias} />
         </div>
 
         {/* Right Side: Sticky */}
-        <div className="w-1/2 min-h-screen sticky top-0 right-0 flex items-center justify-center">
+        <div className="w-1/2 h-screen sticky top-0 right-0 flex items-center justify-center overflow-auto">
           <ProductDetails
             product={product}
             selectedVariant={selectedVariant}

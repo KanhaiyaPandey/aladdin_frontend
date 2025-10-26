@@ -78,7 +78,7 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                   >
                     {isColor ? (
                       imgSrc ? (
-                        <div className="relative w-full h-full">
+                        <div className="relative w-full h-full min-h-[150px]">
                           <Image
                             src={imgSrc}
                             alt={String(value)}

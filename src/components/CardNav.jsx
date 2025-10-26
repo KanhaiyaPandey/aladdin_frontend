@@ -192,9 +192,8 @@ const CardNav = ({
 
           <div
             className=" flex items-center md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 order-1 md:order-none">
-             <h1 className=' font-semibold '>ALADDIN</h1>
+             <a href='/' className=' font-semibold '>ALADDIN</a>
           </div>
-
 
           <div  className="card-nav-cta-button hidden lg:flex gap-5  text-center items-center rounded-[calc(0.75rem-0.2rem)] px-4 h-full font-medium  transition-colors duration-300">
             <a
