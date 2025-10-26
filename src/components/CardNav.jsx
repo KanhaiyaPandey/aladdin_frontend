@@ -1,9 +1,10 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-// use your own icon import if react-icons is not available
-import { LiaAtomSolid } from "react-icons/lia";
 import { motion } from "framer-motion";
 import Link from 'next/link';
+import { FaCartShopping } from "react-icons/fa6";
+
+
 
 
 const CardNav = ({
@@ -213,11 +214,11 @@ const CardNav = ({
             </a>
 
             <a
-               href='/about'
+               href='/cart'
               type="button"
-              className=' text-xs'
+              className=''
               style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}>
-              Contact
+              <span><FaCartShopping /></span>
             </a>
           </div>
 

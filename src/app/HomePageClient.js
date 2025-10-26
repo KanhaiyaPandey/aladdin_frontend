@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import Hero from "../components/Home/Hero";
 import Products from "../components/Home/Products";
 import Categories from "../components/Home/Categories";
+import LoadingScreen from "../components/LoadingScreen";
 
 export default function HomePageClient({ categories, products }) {
   const [dark, setDark] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -15,7 +17,25 @@ export default function HomePageClient({ categories, products }) {
     } else {
       setDark(false);
     }
-  }, []);
+
+    // Wait for data to be available and DOM to be ready
+    if (
+      categories &&
+      products &&
+      Array.isArray(categories) &&
+      Array.isArray(products)
+    ) {
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setLoading(false);
+        });
+      });
+    } else {
+      // If no data available, still hide loading after a short delay
+      setTimeout(() => setLoading(false), 500);
+    }
+  }, [categories, products]);
 
   useEffect(() => {
     localStorage.setItem("theme", dark ? "dark" : "light");
@@ -43,6 +63,10 @@ export default function HomePageClient({ categories, products }) {
       },
     },
   };
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div

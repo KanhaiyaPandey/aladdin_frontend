@@ -5,6 +5,7 @@ import { publicFetch } from "../../utils/helpers";
 import Masonry from "../Masonry";
 import TiltedCard from "../TiltedCard";
 import Link from "next/link";
+import Image from "next/image";
 
 // Recursive function to flatten all nested subcategories
 
@@ -38,10 +39,13 @@ const Categories = ({ categories }) => {
           className=" w-full  relative"
           href={`/category/${category?.categoryId}`}
         >
-          <img
+          <Image
             src={category?.banner}
-            alt=""
-            className=" h-full w-full object-cover"
+            alt={category?.title || "category"}
+            width={600}
+            height={400}
+            className="h-full w-full object-cover"
+            unoptimized
           />
         </Link>
       ))}

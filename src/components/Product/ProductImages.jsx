@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const ProductImages = ({ medias }) => {
   return (
     <div className="w-full">
@@ -13,11 +15,17 @@ const ProductImages = ({ medias }) => {
         }
 
         return (
-          <div key={media.mediaId} className={`${widthClass} inline-block`}>
-            <img
+          <div
+            key={media.mediaId}
+            className={`${widthClass} inline-block relative`}
+          >
+            <Image
               src={media.url}
               alt={media.title || "product image"}
+              width={800}
+              height={600}
               className="w-full h-auto object-cover"
+              unoptimized
             />
           </div>
         );

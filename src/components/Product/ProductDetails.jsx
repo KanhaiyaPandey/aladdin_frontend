@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { CiHeart } from "react-icons/ci";
 import clsx from "clsx";
 
@@ -20,9 +21,7 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
         <div className="w-8/12 flex flex-col">
           <h1 className=" text-xl font-medium uppercase">{product?.title}</h1>
           <h1 className="font-semibold">₹{selectedVariant?.sellPrice}.00</h1>
-          <span className="text-sm font-thin">
-            MRP inclusive of all taxes
-          </span>
+          <span className="text-sm font-thin">MRP inclusive of all taxes</span>
         </div>
         <div className="w-4/12 text-2xl flex items-center justify-center">
           <CiHeart className="cursor-pointer" />
@@ -52,8 +51,9 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                 // safe image src (supports both string and object media shapes)
                 const imgSrc =
                   variantForValue?.variantMedias?.[0]?.url ||
-                  variantForValue?.variantMedias?.[0] || product?.productMedias?.[0]?.url
-                  "";
+                  variantForValue?.variantMedias?.[0] ||
+                  product?.productMedias?.[0]?.url;
+                ("");
 
                 return (
                   <button
@@ -78,13 +78,19 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                   >
                     {isColor ? (
                       imgSrc ? (
-                        <img
-                          src={imgSrc}
-                          alt={String(value)}
-                          className="object-cover w-full h-full"
-                        />
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={imgSrc}
+                            alt={String(value)}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        </div>
                       ) : (
-                        <span className="text-xs text-center h-[100px] fle">{value}</span>
+                        <span className="text-xs text-center h-[100px] fle">
+                          {value}
+                        </span>
                       )
                     ) : (
                       <span>{value}</span>
@@ -95,6 +101,13 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
             </div>
           </div>
         ))}
+
+        <div className=" flex flex-col gap-4">
+          <button className=" bg-black text-white text-sm  w-full p-4 ">
+            Add to Cart
+          </button>
+          {/* <button className=" bg-white text-black text-sm  w-full p-4 border border-gray-400">Buy Now</button> */}
+        </div>
       </div>
     </div>
   );

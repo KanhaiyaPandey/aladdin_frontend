@@ -3,78 +3,78 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Michroma';
-  src: url('/fonts/Michroma.ttf') format('truetype');
+  font-family: "Michroma";
+  src: url("/fonts/Michroma.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Slussen';
-  src: url('/fonts/Slussen-Regular-TRIAL.otf') format('opentype');
+  font-family: "Slussen";
+  src: url("/fonts/Slussen-Regular-TRIAL.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Slussen';
-  src: url('/fonts/Slussen-Semibold-TRIAL.otf') format('opentype');
+  font-family: "Slussen";
+  src: url("/fonts/Slussen-Semibold-TRIAL.otf") format("opentype");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Slussen';
-  src: url('/fonts/Slussen-Extralight-TRIAL.otf') format('opentype');
+  font-family: "Slussen";
+  src: url("/fonts/Slussen-Extralight-TRIAL.otf") format("opentype");
   font-weight: 200;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Slussen Mono';
-  src: url('/fonts/Slussen-Mono-Regular.otf') format('opentype');
+  font-family: "Slussen Mono";
+  src: url("/fonts/Slussen-Mono-Regular.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Slussen Mono';
-  src: url('/fonts/Slussen-Mono-Light.otf') format('opentype');
+  font-family: "Slussen Mono";
+  src: url("/fonts/Slussen-Mono-Light.otf") format("opentype");
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Slussen Mono';
-  src: url('/fonts/Slussen-Mono-Medium.otf') format('opentype');
+  font-family: "Slussen Mono";
+  src: url("/fonts/Slussen-Mono-Medium.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Slussen Mono';
-  src: url('/fonts/Slussen-Mono-Semibold.otf') format('opentype');
+  font-family: "Slussen Mono";
+  src: url("/fonts/Slussen-Mono-Semibold.otf") format("opentype");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Slussen Mono';
-  src: url('/fonts/Slussen-Mono-Thin.otf') format('opentype');
+  font-family: "Slussen Mono";
+  src: url("/fonts/Slussen-Mono-Thin.otf") format("opentype");
   font-weight: 100;
   font-style: normal;
 }
 
 .font-michroma {
-  font-family: 'Michroma', sans-serif;
+  font-family: "Michroma", sans-serif;
 }
 
 .font-slussen {
-  font-family: 'Slussen', sans-serif;
+  font-family: "Slussen", sans-serif;
 }
 
 .font-slussen-mono {
-  font-family: 'Slussen Mono', monospace;
+  font-family: "Slussen Mono", monospace;
 }
 
 .hide-scrollbar {
@@ -84,4 +84,20 @@
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth scrolling optimization */
+@supports (scroll-behavior: smooth) {
+  .scrollbar-hide {
+    scroll-behavior: smooth;
+  }
 }

@@ -1,14 +1,15 @@
-
+import Image from "next/image";
 
 const Hero = () => {
   return (
     <section className="relative text-center h-[500px] sm:h-[700px]">
         {/* Background Image */}
-        <img
+        <Image
             src="/banner3.webp"
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="lazy"
+            alt="banner image"
+            fill
+            className="object-cover"
+            priority
         />
 
         {/* Overlay content */}
