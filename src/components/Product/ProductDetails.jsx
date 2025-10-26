@@ -32,9 +32,14 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
       <div className="flex flex-col gap-6">
         {(product.attributes || []).map((attr, attrIndex) => (
           <div key={attr} className="flex flex-col gap-2">
-            <span className="uppercase font-extralight">
+            <div className=" w-full flex items-center justify-between uppercase font-extralight">
+              <span className="">
               {attr}: {selectedVariant?.options?.[attrIndex] ?? "-"}
             </span>
+
+           {attr === "size" &&  <span>Size Guide</span>}
+            </div>
+        
             <div className="flex gap-2 flex-wrap w-full">
               {attributeValues[attrIndex].map((value) => {
                 const isActive =
@@ -81,7 +86,7 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                         <div className="relative w-full h-full min-h-[150px]">
                           <Image
                             src={imgSrc}
-                            alt={String(value)}
+                            alt={String(value) || "color swatch"}
                             fill
                             className="object-cover"
                             unoptimized
@@ -107,6 +112,10 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
             Add to Cart
           </button>
           {/* <button className=" bg-white text-black text-sm  w-full p-4 border border-gray-400">Buy Now</button> */}
+        </div>
+
+        <div className=" w-full">
+          <h1 className=" font-light text-sm">{product.description}</h1>
         </div>
       </div>
     </div>

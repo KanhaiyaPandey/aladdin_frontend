@@ -47,7 +47,7 @@ export default function ProductPageClient({
         </div>
 
         {/* Right Side: Sticky */}
-        <div className="w-1/2 h-screen sticky top-0 right-0 flex items-center justify-center overflow-auto">
+        <div className="w-1/2 h-full sticky top-0 right-0 flex items-center justify-center overflow-auto">
           <ProductDetails
             product={product}
             selectedVariant={selectedVariant}

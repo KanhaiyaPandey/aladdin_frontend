@@ -26,9 +26,9 @@ const ProductCarousel = ({ products, categories }) => {
   return (
     <div className=" w-full grid grid-cols-1 gap-y-1 items-center justify-start font-body font-slussen">
       <div className=" flex gap-2">
-        {categories.map((category) => (
+        {categories.slice(0,2).map((category) => (
           <button
-            className=" text-xs px-3 py-1 rounded-md hover:bg-black hover:text-white border transition"
+            className=" text-xs px-3 py-1 capitalize rounded-md hover:bg-black hover:text-white border transition"
             key={category?.categoryId}
           >
             {category?.title}
@@ -98,7 +98,7 @@ const ProductCarousel = ({ products, categories }) => {
                   >
                     <Image
                       src={currentImg}
-                      alt={product.productName}
+                      alt={product.productName || "product image"}
                       fill
                       className="object-cover"
                       unoptimized
