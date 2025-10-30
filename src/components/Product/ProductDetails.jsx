@@ -1,7 +1,9 @@
-import React from "react";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import { CiHeart } from "react-icons/ci";
 import clsx from "clsx";
+import { Modal } from "antd";
 
 const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
   if (!product) return null;
@@ -13,6 +15,20 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
     ];
     return values;
   });
+
+  const [open, setOpen] = useState(false);
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const handleOk = () => {
+    setOpen(false);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  }; 
 
   return (
     <div className="w-3/4 p-2 grid grid-cols-1 gap-10 font-slussen">
@@ -37,10 +53,27 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
               {attr}: {selectedVariant?.options?.[attrIndex] ?? "-"}
             </span>
 
-           {attr === "size" &&  <span>Size Guide</span>}
+           {attr === "size" && product.sizeGuide !== "" &&  
+            <div><button onClick={() => setOpen(true)} className=" cursor-pointer hover:opacity-75  hover:scale-95 duration-300 ease-in-out">Size Guide</button>
+              <Modal centered
+                open={open}
+                onOk={() => setOpen(false)}
+                footer={null}
+                    width={{
+                    xs: '90%',
+                    sm: '80%',
+                    md: '70%',
+                    lg: '60%',
+                    xl: '50%',
+                    xxl: '40%',
+                  }}
+                onCancel={() => setOpen(false)}>
+                  <Image src={product?.sizeGuide} alt="size guide" width={800} height={800} className=" object-contain"/>
+                </Modal>
+           </div>}
             </div>
         
-            <div className="flex gap-2 flex-wrap w-full">
+            <div className="flex flex-wrap w-full">
               {attributeValues[attrIndex].map((value) => {
                 const isActive =
                   selectedVariant &&
@@ -77,8 +110,8 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                       "border border-gray-400 text-sm  w-2/12 items-center justify-center uppercase transition-all flex",
                       { "": isColor, "h-[50px]": !isColor },
                       isActive
-                        ? "bg-black text-white border-black"
-                        : "hover:bg-gray-100"
+                        ? "bg-black border text-white border-black"
+                        : "hover:bg-gray-100 hover:border-black"
                     )}
                   >
                     {isColor ? (

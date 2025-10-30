@@ -55,7 +55,7 @@ const ProductCarousel = ({ products, categories }) => {
           const variants = {
             enter: (dir) => ({
               x: dir === "next" ? 100 : -100,
-              opacity: 0,
+              opacity: 1,
             }),
             center: { x: 0, opacity: 1 },
             exit: (dir) => ({
