@@ -5,18 +5,17 @@ const ProductImages = ({ medias }) => {
     <div className="w-full">
       {medias.map((media, index) => {
         let widthClass;
-
-        // Determine the row pattern: 1 image, 2 images, repeat
-        const patternIndex = index % 3; // pattern: [0,1,2]
+        const patternIndex = index % 3; 
+        const remaining = medias.length - index;
         if (patternIndex === 0) {
-          widthClass = "w-full"; // 1st image in row
-        } else if (patternIndex === 1 || patternIndex === 2) {
-          widthClass = "w-1/2"; // 2nd and 3rd image in pattern (2 per row)
+          widthClass = "w-full";
+        } else {
+          widthClass = remaining === 1 ? "w-full" : "w-1/2";
         }
 
         return (
           <div
-            key={media.mediaId}
+            key={media.mediaId || media.url || index}
             className={`${widthClass} inline-block relative`}
           >
             <Image
