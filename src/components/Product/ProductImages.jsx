@@ -29,13 +29,13 @@ const ProductImages = ({ medias = [] }) => {
           ref={carouselRef}
           drag="x"
           dragConstraints={dragConstraints}
-          className="flex gap-3 py-4 px-3"
+          className="flex"
           style={{ cursor: "grab" }}
         >
           {medias.map((media, idx) => (
             <div
               key={media.mediaId || media.url || idx}
-              className="flex-shrink-0 w-[85%] sm:w-[80%] md:w-[60%] rounded-lg overflow-hidden relative"
+              className="flex-shrink-0 w-[100%] sm:w-[100%] md:w-[60%] overflow-hidden relative"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <Image
@@ -43,7 +43,7 @@ const ProductImages = ({ medias = [] }) => {
                 alt={media.title || "product image"}
                 width={800}
                 height={600}
-                className="w-full h-auto object-cover rounded-lg"
+                className="w-full h-auto object-cover"
                 unoptimized
               />
             </div>
