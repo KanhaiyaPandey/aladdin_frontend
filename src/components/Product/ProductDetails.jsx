@@ -1,9 +1,9 @@
-
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { CiHeart } from "react-icons/ci";
 import clsx from "clsx";
 import { Modal } from "antd";
+import { motion } from "framer-motion";
 
 const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
   if (!product) return null;
@@ -18,29 +18,46 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
 
   const [open, setOpen] = useState(false);
 
-  const showModal = () => {
-    setOpen(true);
-  };
+  // Refs + constraints for per-attribute small-screen carousels
+  const carouselRefs = useRef([]);
+  const [dragConstraintsMap, setDragConstraintsMap] = useState({});
 
-  const handleOk = () => {
-    setOpen(false);
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
-  }; 
+  useEffect(() => {
+    const update = () => {
+      const map = {};
+      (attributeValues || []).forEach((_, i) => {
+        const el = carouselRefs.current[i];
+        if (!el) return;
+        const scrollWidth = el.scrollWidth;
+        const offsetWidth = el.offsetWidth;
+        const maxScroll = Math.max(0, scrollWidth - offsetWidth);
+        map[i] = { left: -maxScroll, right: 0 };
+      });
+      setDragConstraintsMap(map);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   return (
-    <div className="w-3/4 p-2 grid grid-cols-1 gap-10 font-slussen">
+    <div className="w-full lg:w-3/4 p-4 grid grid-cols-1 gap-6 font-slussen max-w-4xl mx-auto overflow-hidden">
       {/* === Top Section === */}
-      <div className="flex items-start justify-between">
-        <div className="w-8/12 flex flex-col">
-          <h1 className=" text-xl font-medium uppercase">{product?.title}</h1>
-          <h1 className="font-semibold">₹{selectedVariant?.sellPrice}.00</h1>
-          <span className="text-sm font-thin">MRP inclusive of all taxes</span>
+      <div className="flex flex-row w-full items-start md:items-center justify-between gap-4">
+        <div className="w-full md:w-8/12 flex flex-col gap-2">
+          <h1 className=" sm:text-xl md:text-2xl font-medium uppercase">
+            {product?.title}
+          </h1>
+          <h2 className="font-semibold text-lg">
+            ₹{selectedVariant?.sellPrice}.00
+          </h2>
+          <span className="text-sm text-gray-600">
+            MRP inclusive of all taxes
+          </span>
         </div>
-        <div className="w-4/12 text-2xl flex items-center justify-center">
-          <CiHeart className="cursor-pointer" />
+
+        <div className="w-full md:w-4/12 flex items-center justify-end">
+          <CiHeart className="cursor-pointer text-2xl" />
         </div>
       </div>
 
@@ -48,32 +65,122 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
       <div className="flex flex-col gap-6">
         {(product.attributes || []).map((attr, attrIndex) => (
           <div key={attr} className="flex flex-col gap-2">
-            <div className=" w-full flex items-center justify-between uppercase font-extralight">
-              <span className="">
-              {attr}: {selectedVariant?.options?.[attrIndex] ?? "-"}
-            </span>
+            <div className="w-full flex items-center justify-between uppercase font-extralight">
+              <span className="text-sm">
+                {attr}: {selectedVariant?.options?.[attrIndex] ?? "-"}
+              </span>
 
-           {attr === "size" && product.sizeGuide !== "" &&  
-            <div><button onClick={() => setOpen(true)} className=" cursor-pointer hover:opacity-75  hover:scale-95 duration-300 ease-in-out">Size Guide</button>
-              <Modal centered
-                open={open}
-                onOk={() => setOpen(false)}
-                footer={null}
+              {attr === "size" && product.sizeGuide !== "" && (
+                <div>
+                  <button
+                    onClick={() => setOpen(true)}
+                    className="cursor-pointer hover:opacity-75 hover:scale-95 duration-200 ease-in-out text-sm"
+                  >
+                    Size Guide
+                  </button>
+
+                  <Modal
+                    centered
+                    open={open}
+                    onOk={() => setOpen(false)}
+                    onCancel={() => setOpen(false)}
+                    footer={null}
                     width={{
-                    xs: '90%',
-                    sm: '80%',
-                    md: '70%',
-                    lg: '60%',
-                    xl: '50%',
-                    xxl: '40%',
-                  }}
-                onCancel={() => setOpen(false)}>
-                  <Image src={product?.sizeGuide} alt="size guide" width={800} height={800} className=" object-contain"/>
-                </Modal>
-           </div>}
+                      xs: "95%",
+                      sm: "85%",
+                      md: "75%",
+                      lg: "60%",
+                      xl: "50%",
+                    }}
+                  >
+                    <Image
+                      src={product?.sizeGuide}
+                      alt="size guide"
+                      width={800}
+                      height={800}
+                      className="object-contain"
+                      unoptimized
+                    />
+                  </Modal>
+                </div>
+              )}
             </div>
-        
-            <div className="flex flex-wrap w-full">
+
+            {/* Small screens: horizontal carousel */}
+            <div className="w-full lg:hidden">
+              <motion.div
+                ref={(el) => (carouselRefs.current[attrIndex] = el)}
+                drag="x"
+                dragConstraints={
+                  dragConstraintsMap[attrIndex] || { left: 0, right: 0 }
+                }
+                className="flex py-3 px-2"
+                style={{ cursor: "grab" }}
+              >
+                {attributeValues[attrIndex].map((value) => {
+                  const isActive =
+                    selectedVariant &&
+                    selectedVariant.options[attrIndex] === value;
+
+                  const isColor = String(attr).toLowerCase() === "color";
+
+                  const variantForValue = (product.variants || []).find(
+                    (v) => v.options[attrIndex] === value
+                  );
+
+                  const imgSrc =
+                    variantForValue?.variantMedias?.[0]?.url ||
+                    variantForValue?.variantMedias?.[0] ||
+                    product?.productMedias?.[0]?.url ||
+                    "";
+
+                  return (
+                    <div
+                      key={String(value)}
+                      className={clsx(
+                        "flex-shrink-0 min-w-[110px] sm:min-w-[140px] md:min-w-[160px] overflow-hidden border border-gray-300",
+                        isActive
+                          ? "bg-black text-white border-black"
+                          : "bg-white"
+                      )}
+                    >
+                      <button
+                        onClick={() => {
+                          const newVariant = (product.variants || []).find(
+                            (v) =>
+                              v.options.every((opt, i) =>
+                                i === attrIndex
+                                  ? opt === value
+                                  : opt === selectedVariant?.options?.[i]
+                              )
+                          );
+                          if (newVariant) onSelectVariant(newVariant);
+                        }}
+                        className={`w-full ${isColor ? 'p-0' : 'p-3'} h-full flex items-center justify-center uppercase text-sm`}
+                      >
+                        {isColor ? (
+                          imgSrc ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={imgSrc}
+                              alt={String(value)}
+                              className="w-full h-[150px] p-0 object-cover"
+                            />
+                          ) : (
+                            <span className="text-xs">{value}</span>
+                          )
+                        ) : (
+                          <span className="text-center px-2">{value}</span>
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
+              </motion.div>
+            </div>
+
+            {/* Large screens: grid / wrap */}
+            <div className="hidden lg:flex flex-wrap w-full">
               {attributeValues[attrIndex].map((value) => {
                 const isActive =
                   selectedVariant &&
@@ -81,21 +188,27 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
 
                 const isColor = String(attr).toLowerCase() === "color";
 
-                // find a variant that has this attribute value (used for image preview)
                 const variantForValue = (product.variants || []).find(
                   (v) => v.options[attrIndex] === value
                 );
 
-                // safe image src (supports both string and object media shapes)
                 const imgSrc =
                   variantForValue?.variantMedias?.[0]?.url ||
                   variantForValue?.variantMedias?.[0] ||
-                  product?.productMedias?.[0]?.url;
-                ("");
+                  product?.productMedias?.[0]?.url ||
+                  "";
+
+                const btnWidth = isColor
+                  ? "w-1/3 sm:w-1/4 md:w-2/12"
+                  : "w-1/3 sm:w-1/4 md:w-2/12";
+
+                const btnHeight = isColor
+                  ? "min-h-[200px] md:min-h-[130px]"
+                  : "py-3";
 
                 return (
                   <button
-                    key={value}
+                    key={String(value)}
                     onClick={() => {
                       const newVariant = (product.variants || []).find((v) =>
                         v.options.every((opt, i) =>
@@ -107,16 +220,17 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                       if (newVariant) onSelectVariant(newVariant);
                     }}
                     className={clsx(
-                      "border border-gray-400 text-sm  w-2/12 items-center justify-center uppercase transition-all flex",
-                      { "": isColor, "h-[50px]": !isColor },
+                      "border border-gray-300 text-sm items-center justify-center uppercase transition-all flex overflow-hidden",
+                      btnWidth,
+                      btnHeight,
                       isActive
-                        ? "bg-black border text-white border-black"
-                        : "hover:bg-gray-100 hover:border-black"
+                        ? "bg-black text-white border-black"
+                        : "bg-white hover:bg-gray-100"
                     )}
                   >
                     {isColor ? (
                       imgSrc ? (
-                        <div className="relative w-full h-full min-h-[150px]">
+                        <div className="relative w-full h-full">
                           <Image
                             src={imgSrc}
                             alt={String(value) || "color swatch"}
@@ -126,12 +240,12 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                           />
                         </div>
                       ) : (
-                        <span className="text-xs text-center h-[100px] fle">
-                          {value}
-                        </span>
+                        <div className="flex items-center justify-center w-full h-full px-2">
+                          <span className="text-xs text-center">{value}</span>
+                        </div>
                       )
                     ) : (
-                      <span>{value}</span>
+                      <span className="w-full text-center px-2">{value}</span>
                     )}
                   </button>
                 );
@@ -140,15 +254,16 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
           </div>
         ))}
 
-        <div className=" flex flex-col gap-4">
-          <button className=" bg-black text-white text-sm  w-full p-4 ">
+        <div className="flex flex-col gap-4">
+          <button className="bg-black text-white text-sm w-full p-4 rounded">
             Add to Cart
           </button>
-          {/* <button className=" bg-white text-black text-sm  w-full p-4 border border-gray-400">Buy Now</button> */}
         </div>
 
-        <div className=" w-full">
-          <h1 className=" font-light text-sm">{product.description}</h1>
+        <div className="w-full">
+          <h1 className="font-light text-sm leading-relaxed">
+            {product.description}
+          </h1>
         </div>
       </div>
     </div>

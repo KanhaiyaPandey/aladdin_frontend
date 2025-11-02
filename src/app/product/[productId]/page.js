@@ -11,9 +11,6 @@ export default async function ProductPage({ params, searchParams }) {
       variantId
     );
 
-    console.log("kjaefkenfnew",product?.sizeGuide);
-    
-
   
     return (
       <ProductPageClient

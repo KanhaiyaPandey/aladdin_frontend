@@ -28,31 +28,39 @@ export default function ProductPageClient({
 
   if (!product) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center min-h-screen">
         <p className="text-gray-600 text-lg">Product not found.</p>
       </div>
     );
   }
 
   return (
-    // full viewport container so left column's scrolling is isolated
-    <div className="w-full flex flex-col items-center justify-center font-body">
-      <div className="w-full flex h-screen items-start justify-center relative">
-        {/* Left Side: Scrollable (confined to viewport) */}
+    <div className="w-full min-h-screen font-body">
+      {/* layout: column on small, two-columns on lg+ */}
+      <div className="w-full flex flex-col lg:flex-row items-start lg:items-stretch hide-scrollbar">
+        {/* Left: images
+            - full width on small screens (stacked)
+            - half width and independent vertical scroll on lg+ */}
         <div
-          className="w-1/2 h-full overflow-y-auto hide-scrollbar scroll-smooth"
+          className="w-full lg:w-1/2 lg:h-screen lg:overflow-y-auto hide-scrollbar lg:sticky lg:top-0 bg-white"
           style={{ WebkitOverflowScrolling: "touch" }}
         >
-          <ProductImages medias={medias} />
+          <div className="">
+            <ProductImages medias={medias} />
+          </div>
         </div>
 
-        {/* Right Side: Sticky */}
-        <div className="w-1/2 h-full sticky top-0 right-0 flex items-center justify-center overflow-auto">
-          <ProductDetails
-            product={product}
-            selectedVariant={selectedVariant}
-            onSelectVariant={setSelectedVariant}
-          />
+        {/* Right: details
+            - below images on small screens
+            - half width and sticky on lg+ */}
+        <div className="w-full hide-scrollbar lg:w-1/2 lg:h-screen lg:sticky lg:top-0 overflow-auto flex items-center justify-center">
+          <div className=" w-full mx-auto px-4 py-6">
+            <ProductDetails
+              product={product}
+              selectedVariant={selectedVariant}
+              onSelectVariant={setSelectedVariant}
+            />
+          </div>
         </div>
       </div>
     </div>
