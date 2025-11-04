@@ -11,6 +11,9 @@ export default async function ProductPage({ params, searchParams }) {
       variantId
     );
 
+ 
+    
+
   
     return (
       <ProductPageClient
