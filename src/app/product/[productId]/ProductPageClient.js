@@ -39,7 +39,7 @@ export default function ProductPageClient({
       setMedias(selectedVariant.variantMedias || product.productMedias || []);
       const newUrl = `/product/${product.productId}?variantid=${selectedVariant.variantId}`;
       if (window.location.pathname + window.location.search !== newUrl) {
-        router.replace(newUrl);
+         window.history.replaceState(null, "", newUrl);
       }
     }
   }, [selectedVariant, product, router]);
