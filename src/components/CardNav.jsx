@@ -3,6 +3,8 @@ import { gsap } from "gsap";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaCartShopping } from "react-icons/fa6";
+import { FaUser } from "react-icons/fa";
+
 
 const CardNav = ({
   items,
@@ -206,6 +208,15 @@ const CardNav = ({
             >
               F&Q
             </Link>
+
+            <Link
+              href="/account"
+              className=""
+              style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
+            >
+              <FaUser className="" />
+            </Link>
+
             <Link
               href="/cart"
               className=""

@@ -28,12 +28,11 @@ const ProductCards = ({product, router, handleImageChange,
                     style={{ willChange: "transform, opacity" }}
                     className="absolute inset-0 cursor-pointer"
                     onClick={() =>
-                      router.push(
-                        product.variants.length > 0
-                          ? `/product/${product.productId}?variantid=${product.variants[0].variantId}`
-                          : `/product/${product.productId}`
-                      )
-                    }
+                          window.location.href =
+                            product.variants.length > 0
+                              ? `/product/${product.productId}?variantid=${product.variants[0].variantId}`
+                              : `/product/${product.productId}`
+                        }
                   >
                     <Image
                       src={currentImg}
@@ -72,7 +71,7 @@ const ProductCards = ({product, router, handleImageChange,
                 )}
               </div>
 
-              <Link
+              <a
                 className="mt-2 text-start flex flex-col gap-1 cursor-pointer"
                 href={
                   product.variants.length > 0
@@ -82,7 +81,7 @@ const ProductCards = ({product, router, handleImageChange,
               >
                 <h3 className="text-xs truncate">{product.title}</h3>
                 <p className="text-xs font-medium">₹{product.sellPrice}/-</p>
-              </Link>
+              </a>
             </div>
   )
 }
