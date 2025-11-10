@@ -236,9 +236,9 @@ const CardNav = ({
             )}
             </Link>}
 
-            <button onClick={() => testApi()} >
+            {/* <button onClick={() => testApi()} >
               Test API
-            </button>
+            </button> */}
 
             <Link
               href="/cart"
