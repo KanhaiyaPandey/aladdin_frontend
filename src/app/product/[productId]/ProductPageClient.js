@@ -83,9 +83,9 @@ export default function ProductPageClient({
       </div>
 
       <div className=" w-full mt-10 grid p-4 gap-4">
-        <div className="flex items-center w-full justify-start">
-           <p className="text-center">Style With</p>
-        </div>
+       { product?.upSellProducts?.length > 0 && <div className="flex items-center border-b py-1 w-full justify-start">
+           <p className="text-center font-semibold text-2xl">Style With</p>
+        </div>}
 
        <div
         className="flex overflow-x-auto gap-3 scrollbar-hide"
@@ -96,7 +96,7 @@ export default function ProductPageClient({
           willChange: "scroll-position",
         }}
       >
-        {product?.crossSellProducts.slice(0, 20).map((product) => {
+        { product?.crossSellProducts.slice(0, 20).map((product) => {
           const medias = product.productMedias || [];
           const currentIndex = imageIndexes[product.productId] || 0;
           const direction = directions[product.productId] || "next";
@@ -124,11 +124,11 @@ export default function ProductPageClient({
         })}
       </div>
 
-        <div className="flex items-center w-full justify-start mt-5">
-           <p className="text-center">You May Also Like</p>
-        </div>
+      { product?.upSellProducts?.length > 0 && <div className="flex items-center border-b py-1 w-full justify-start mt-5">
+           <p className="text-center font-semibold text-2xl">You May Also Like</p>
+        </div>}
 
-              <div
+      <div
         className="flex overflow-x-auto gap-3 scrollbar-hide"
         style={{
           scrollSnapType: "x mandatory",

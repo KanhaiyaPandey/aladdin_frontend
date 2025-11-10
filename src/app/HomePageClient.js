@@ -18,6 +18,8 @@ export default function HomePageClient({ categories, products }) {
       setDark(false);
     }
 
+    
+
     // Wait for data to be available and DOM to be ready
     if (
       categories &&

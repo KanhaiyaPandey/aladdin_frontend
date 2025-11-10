@@ -4,10 +4,13 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaCartShopping } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
+import { authFetch } from "@/utils/helpers";
+import Image from "next/image";
 
 
 const CardNav = ({
   items,
+  user_info,
   className = "",
   ease = "power3.out",
   menuColor,
@@ -137,6 +140,16 @@ const CardNav = ({
     if (el) cardsRef.current[i] = el;
   };
 
+  // const testApi = async () => {
+  //   try {
+  //     const response = await authFetch.get('/validate-token');
+  //     const data = response.data.data;
+  //     console.log('API Response:', data);
+  //   } catch (error) {
+  //     console.error('API Error:', error);
+  //   }
+  // }
+
   return (
     <div
       className={`card-nav-container  absolute left-1/2 -translate-x-1/2  w-[60vw]  z-[99] top-[0.5em] md:top-[1em] ${className}`}
@@ -194,28 +207,36 @@ const CardNav = ({
           </div>
 
           <div className="card-nav-cta-button hidden lg:flex gap-5  text-center items-center rounded-[calc(0.75rem-0.2rem)] px-4 h-full font-medium  transition-colors duration-300">
-            <Link
-              href="/about"
-              className="text-xs"
-              style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
-            >
-              About
-            </Link>
-            <Link
-              href="/faq"
-              className="text-xs"
-              style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
-            >
-              F&Q
-            </Link>
 
-            <Link
-              href="/account"
+           { !user_info && <Link
+              href="http://localhost:8080/oauth2/authorization/google"
               className=""
               style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
             >
               <FaUser className="" />
+            </Link>}
+
+            <Link
+              href="/account"
+              style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
+              className="flex items-center justify-center rounded-full overflow-hidden"
+            >
+              {user_info?.profilePicture ? (
+                <Image
+                  src={user_info.profilePicture}
+                  width={30}
+                  height={30}
+                  alt={user_info.name || "User"}
+                  className="rounded-full object-cover"
+                />
+              ) : (
+                <span className="text-sm font-medium">A</span> // fallback initial or icon
+              )}
             </Link>
+
+            {/* <button onClick={() => testApi()} >
+              Test API
+            </button> */}
 
             <Link
               href="/cart"

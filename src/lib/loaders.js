@@ -1,4 +1,5 @@
-import { publicFetch } from '../utils/helpers';
+import { cookies } from 'next/headers';
+import { authFetch, publicFetch } from '../utils/helpers';
 
 // Cache for API responses
 const cache = new Map();
@@ -47,11 +48,52 @@ export const getProducts = async (limit = 20) => {
   });
 };
 
+
+export const getUserInfo = async () => {
+    const cookieStore = await cookies(); // 🔥 async fix here
+    let jwt = cookieStore.get("JWT_TOKEN")?.value;
+
+  if (!jwt) {
+    console.warn("⚠️ No JWT token found in cookies.");
+    return null;
+  }
+    if (typeof window !== "undefined") {
+    const cachedUser = localStorage.getItem("USER_INFO");
+    if (cachedUser) {
+      try {
+        return JSON.parse(cachedUser);
+      } catch (e) {
+        console.warn("⚠️ Invalid USER_INFO in localStorage, refetching...");
+      }
+    }
+  }
+  
+  return getCachedData("user_info", async () => {
+    try {
+      const userResponse = await authFetch.get("/validate-token", {
+        headers: {
+          Cookie: `JWT_TOKEN=${jwt}`, // 👈 forward cookie manually
+        },
+      });
+
+      const userData = userResponse.data.data || null;
+          if (typeof window !== "undefined" && userData) {
+            localStorage.setItem("USER_INFO", JSON.stringify(userData));
+      }
+        return userData; 
+      } catch (err) {
+        console.error("❌ Error validating token:", err.response?.status, err.message);
+        return null;
+      }
+  });
+};
+
 // Single product loader
 export const getProduct = async (productId) => {
   return getCachedData(`product_${productId}`, async () => {
     const response = await publicFetch.get(`/product/${productId}`);
-    return response.data.data;
+    const user_info = response.data.data || null;
+    return user_info;
   });
 };
 
@@ -59,14 +101,14 @@ export const getProduct = async (productId) => {
 export const getHomepageData = async () => {
   return getCachedData('homepage', async () => {
     try {
-      const [categories, products] = await Promise.all([
+      const [categories, products, user_info] = await Promise.all([
         getCategories(),
-        getProducts(20)
+        getProducts(20),
       ]);
       
       return {
         categories,
-        products
+        products,
       };
     } catch (error) {
       console.error('Error loading homepage data:', error);
