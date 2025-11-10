@@ -215,8 +215,8 @@ const CardNav = ({
             >
               <FaUser className="" />
             </Link>}
-
-            <Link
+ 
+          { user_info && <Link
               href="/account"
               style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
               className="flex items-center justify-center rounded-full overflow-hidden"
@@ -230,9 +230,11 @@ const CardNav = ({
                   className="rounded-full object-cover"
                 />
               ) : (
-                <span className="text-sm font-medium">A</span> // fallback initial or icon
-              )}
-            </Link>
+              <span className="text-sm font-medium">
+                {user_info?.name?.charAt(0).toUpperCase() || "A"}
+              </span>   
+            )}
+            </Link>}
 
             {/* <button onClick={() => testApi()} >
               Test API
