@@ -140,15 +140,15 @@ const CardNav = ({
     if (el) cardsRef.current[i] = el;
   };
 
-  // const testApi = async () => {
-  //   try {
-  //     const response = await authFetch.get('/validate-token');
-  //     const data = response.data.data;
-  //     console.log('API Response:', data);
-  //   } catch (error) {
-  //     console.error('API Error:', error);
-  //   }
-  // }
+  const testApi = async () => {
+    try {
+      const response = await authFetch.get('/validate-token');
+      const data = response.data.data;
+      console.log('API Response:', data);
+    } catch (error) {
+      console.error('API Error:', error);
+    }
+  }
 
   return (
     <div
@@ -208,7 +208,7 @@ const CardNav = ({
 
           <div className="card-nav-cta-button hidden lg:flex gap-5  text-center items-center rounded-[calc(0.75rem-0.2rem)] px-4 h-full font-medium  transition-colors duration-300">
 
-           { !user_info && <Link
+           { user_info && <Link
               href="http://localhost:8080/oauth2/authorization/google"
               className=""
               style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
@@ -236,9 +236,9 @@ const CardNav = ({
             )}
             </Link>}
 
-            {/* <button onClick={() => testApi()} >
+            <button onClick={() => testApi()} >
               Test API
-            </button> */}
+            </button>
 
             <Link
               href="/cart"
