@@ -15,8 +15,8 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
-     domains: ['lh3.googleusercontent.com'], 
+    domains: ["lh3.googleusercontent.com"],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
