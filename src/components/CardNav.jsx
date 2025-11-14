@@ -153,7 +153,7 @@ const CardNav = ({
 
   return (
     <div
-      className={`card-nav-container  absolute left-1/2 -translate-x-1/2  w-[60vw]  z-[99] top-[0.5em] md:top-[1em] ${className}`}
+      className={`card-nav-container  absolute left-1/2 -translate-x-1/2  w-[80vw]  z-[99] top-[0.5em] md:top-[1em] ${className}`}
     >
       <nav
         ref={navRef}
@@ -239,7 +239,7 @@ const CardNav = ({
                 <Link
                   href={
                     process.env.PRODUCTION_OAUTH_REDIRECT_URI ||
-                    "https://aladdin-0kuf.onrender.com/login/oauth2/code/google"
+                    "http://localhost:8080/login/oauth2/code/google"
                   }
                   className="flex items-center justify-center w-full h-full"
                   aria-label="Sign in"
@@ -269,46 +269,68 @@ const CardNav = ({
           } md:flex-row md:items-end md:gap-[12px]`}
           aria-hidden={!isExpanded}
         >
-          {(items || []).slice(0, 3).map((item, idx) => (
-            <div
-              key={`${item.label}-${idx}`}
-              className="nav-card select-none border backdrop-blur-md  relative flex flex-col gap-2 p-[12px_16px] rounded-[calc(0.75rem-0.2rem)] min-w-0 flex-[1_1_auto] h-auto min-h-[60px] md:h-full md:min-h-0 md:flex-[1_1_0%]"
-              ref={setCardRef(idx)}
-              style={{ backgroundColor: item.bgColor, color: item.textColor }}
-            >
-              <div className="nav-card-label font-normal tracking-[-0.5px] text-[18px] md:text-[22px]">
-                {item.label}
+          
+            <div className="nav-card select-none border backdrop-blur-md  relative flex flex-col gap-2 p-[12px_16px] rounded-[calc(0.75rem-0.2rem)] min-w-0 flex-[1_1_auto] h-auto min-h-[60px] md:h-full md:min-h-0 md:flex-[1_1_0%]"
+              ref={setCardRef(0)} >
+            <div className="nav-card-label font-normal tracking-[-0.5px] text-[18px] md:text-[22px]">
+                Categories
               </div>
               <div className="nav-card-links mt-auto flex flex-col gap-[2px]">
-                {item.links?.map((lnk, i) => {
-                  const isExternal = /^https?:\/\//.test(String(lnk.href));
-                  return isExternal ? (
-                    <a
-                      key={`${lnk.label}-${i}`}
-                      className="nav-card-link inline-flex items-center gap-[6px] no-underline cursor-pointer transition-opacity duration-300 hover:opacity-75 text-[15px] md:text-[16px]"
-                      href={lnk.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={lnk.ariaLabel}
-                    >
-                      {lnk.icon}
-                      {lnk.label}
-                    </a>
-                  ) : (
+               
+
+                   {categories.map((category) => 
                     <Link
-                      key={`${lnk.label}-${i}`}
-                      href={lnk.href || "#"}
-                      className="nav-card-link inline-flex items-center gap-[6px] no-underline cursor-pointer transition-opacity duration-300 hover:opacity-75 text-[15px] md:text-[16px]"
-                      aria-label={lnk.ariaLabel}
+                      key={category?.categoryId}
+                      href={`/category/${category?.slug}`}
+                      className="nav-card-link text-sm md:text-base capitalize py-1 hover:opacity-70 transition-opacity duration-200"
                     >
-                      {lnk.icon}
-                      {lnk.label}
+                      {category?.title}
                     </Link>
-                  );
-                })}
+                  )}
+          
+            
               </div>
             </div>
-          ))}
+
+            {/* account */}
+            <div className="nav-card select-none border backdrop-blur-md  relative flex flex-col gap-2 p-[12px_16px] rounded-[calc(0.75rem-0.2rem)] min-w-0 flex-[1_1_auto] h-auto min-h-[60px] md:h-full md:min-h-0 md:flex-[1_1_0%]" ref={setCardRef(1)} >
+              <div className="nav-card-label font-normal tracking-[-0.5px] text-[18px] md:text-[22px]">
+                Account
+              </div>
+
+            <div className="nav-card-links mt-auto flex flex-col gap-[2px]">
+                {user_info ? (
+                  <>
+                    <Link
+                      href="/account"
+                      className="nav-card-link text-sm md:text-base py-1 hover:opacity-70 transition-opacity duration-200"
+                    >
+                      Profile
+                    </Link>
+                    <Link
+                      href="/logout"
+                      className="nav-card-link text-sm md:text-base py-1 hover:opacity-70 transition-opacity duration-200"
+                    >
+                      Logout
+                    </Link>
+                  </>
+                ) : (
+                  <Link
+                    href={
+                      process.env.PRODUCTION_OAUTH_REDIRECT_URI ||
+                      "http://localhost:8080/login/oauth2/code/google"
+                    }
+                    className="nav-card-link text-sm md:text-base py-1 hover:opacity-70 transition-opacity duration-200"
+                  >
+                    Login / Sign Up
+                  </Link>
+                )}
+              </div>
+
+              </div>
+
+
+
         </div>
       </nav>
     </div>
