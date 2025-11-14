@@ -208,13 +208,13 @@ const CardNav = ({
 
           <div className="card-nav-cta-button hidden lg:flex gap-5  text-center items-center rounded-[calc(0.75rem-0.2rem)] px-4 h-full font-medium  transition-colors duration-300">
 
-           { user_info && <Link
+         <Link
               href={ process.env.PRODUCTION_OAUTH_REDIRECT_URI || "https://aladdin-0kuf.onrender.com/login/oauth2/code/google"}
               className=""
               style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
             >
               <FaUser className="" />
-            </Link>}
+            </Link>
  
           { user_info && <Link
               href="/account"
