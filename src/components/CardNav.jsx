@@ -6,11 +6,12 @@ import { FaCartShopping } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 import { authFetch } from "@/utils/helpers";
 import Image from "next/image";
-
+import LoadingSpinner from "./LoadingSpinner";
 
 const CardNav = ({
   items,
   user_info,
+  loading,
   className = "",
   ease = "power3.out",
   menuColor,
@@ -140,15 +141,15 @@ const CardNav = ({
     if (el) cardsRef.current[i] = el;
   };
 
-  const testApi = async () => {
-    try {
-      const response = await authFetch.get('/validate-token');
-      const data = response.data.data;
-      console.log('API Response:', data);
-    } catch (error) {
-      console.error('API Error:', error);
-    }
-  }
+  // const testApi = async () => {
+  //   try {
+  //     const response = await authFetch.get('/validate-token');
+  //     const data = response.data.data;
+  //     console.log('API Response:', data);
+  //   } catch (error) {
+  //     console.error('API Error:', error);
+  //   }
+  // }
 
   return (
     <div
@@ -183,22 +184,21 @@ const CardNav = ({
             />
           </div>
 
-            <ul className="hidden lg:flex gap-3">
-              {categories.map((category) => (
-                <li
-                  
-                  key={category?.categoryId}
-                  className="md:inline-flex flex-col items-center text-xs font-medium h-full text-center relative"
+          <ul className="hidden lg:flex gap-3">
+            {categories.map((category) => (
+              <li
+                key={category?.categoryId}
+                className="md:inline-flex flex-col items-center text-xs font-medium h-full text-center relative"
+              >
+                <Link
+                  href={`/category/${category?.slug}`}
+                  className="relative py-1 capitalize hover:opacity-35 transition-opacity duration-300"
                 >
-                  <Link
-                    href={`/category/${category?.slug}`}
-                    className="relative py-1 capitalize hover:opacity-35 transition-opacity duration-300"
-                  >
-                    {category?.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                  {category?.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
 
           <div className=" flex items-center md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 order-1 md:order-none">
             <Link href="/" className="font-semibold">
@@ -206,39 +206,48 @@ const CardNav = ({
             </Link>
           </div>
 
-          <div className="card-nav-cta-button hidden lg:flex gap-5  text-center items-center rounded-[calc(0.75rem-0.2rem)] px-4 h-full font-medium  transition-colors duration-300">
-
-         <Link
-              href={ process.env.PRODUCTION_OAUTH_REDIRECT_URI || "https://aladdin-0kuf.onrender.com/login/oauth2/code/google"}
-              className=""
+          <div className="card-nav-cta-button hidden lg:flex gap-5 text-center items-center rounded-[calc(0.75rem-0.2rem)] px-4 h-full font-medium transition-colors duration-300">
+   
+            {/* Fixed-width container for loading/profile/login (prevents shift) */}
+            <div
+              className="w-[30px] h-[30px] flex items-center justify-center rounded-full overflow-hidden"
               style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
             >
-              <FaUser className="" />
-            </Link>
- 
-          { user_info && <Link
-              href="/account"
-              style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
-              className="flex items-center justify-center rounded-full overflow-hidden"
-            >
-              {user_info?.profilePicture ? (
-                <Image
-                  src={user_info.profilePicture}
-                  width={30}
-                  height={30}
-                  alt={user_info.name || "User"}
-                  className="rounded-full object-cover"
-                />
+              {loading ? (
+                <LoadingSpinner variant="ring" size={30} className="text-blue-600" />
+              ) : user_info ? (
+                <Link
+                  href="/account"
+                  className="flex items-center justify-center w-full h-full"
+                  aria-label="Open account"
+                >
+                  {user_info?.profilePicture ? (
+                    <Image
+                      src={user_info.profilePicture}
+                      width={30}
+                      height={30}
+                      alt={user_info.name || "User"}
+                      className="rounded-full object-cover w-full h-full"
+                    />
+                  ) : (
+                    <span className="text-sm font-medium w-full h-full flex items-center justify-center">
+                      {user_info?.name?.charAt(0).toUpperCase() || "A"}
+                    </span>
+                  )}
+                </Link>
               ) : (
-              <span className="text-sm font-medium">
-                {user_info?.name?.charAt(0).toUpperCase() || "A"}
-              </span>   
-            )}
-            </Link>}
-
-            <button onClick={() => testApi()} >
-              Test API
-            </button>
+                <Link
+                  href={
+                    process.env.PRODUCTION_OAUTH_REDIRECT_URI ||
+                    "https://aladdin-0kuf.onrender.com/login/oauth2/code/google"
+                  }
+                  className="flex items-center justify-center w-full h-full"
+                  aria-label="Sign in"
+                >
+                  <FaUser className="text-base" />
+                </Link>
+              )}
+            </div>
 
             <Link
               href="/cart"
