@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CardNav from "../components/CardNav";
+import { authFetch } from "@/utils/helpers";
 
 export default function LayoutClient({ categories, children }) {
 
@@ -10,7 +11,7 @@ export default function LayoutClient({ categories, children }) {
    useEffect(() => {
      const fetchUserInfo = async () => {
        try {
-         const response = await publicFetch("/user/info");
+         const response = await authFetch("/validate-token");
          setUserInfo(response.data.data || null);
          console.log(response.data.data);
        } catch (error) {
