@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers';
 import { publicFetch } from '../utils/helpers';
 
 // Cache for API responses
