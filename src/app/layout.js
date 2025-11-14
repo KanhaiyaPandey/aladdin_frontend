@@ -3,7 +3,7 @@
 import { createContext, use, useContext, useEffect, useState } from "react";
 import CardNav from "../components/CardNav";
 import { authFetch } from "../utils/helpers";
-import { getCategories, getUserInfo } from "../lib/loaders";
+import { getCategories } from "../lib/loaders";
 import LayoutClient from "./LayoutClient";
 import { Inter } from "next/font/google";
 import "./globals.css";
