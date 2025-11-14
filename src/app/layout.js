@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, use, useContext, useEffect, useState } from "react";
 import CardNav from "../components/CardNav";
 import { authFetch } from "../utils/helpers";
 import { getCategories, getUserInfo } from "../lib/loaders";
@@ -19,12 +19,9 @@ export function useUser() {
 export default async function RootLayout({ children }) {
   // Server-side data fetching for categories
   const categories = await getCategories();
-  const user_info = await getUserInfo();
 
-  console.log("user info", user_info);
-
-  const [userInfo, setUserInfo] = useState(user_info);
-  const [loading, setLoading] = useState(!user_info);
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(!userInfo);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -38,13 +35,8 @@ export default async function RootLayout({ children }) {
         setLoading(false);
       }
     };
-
-    if (!user_info) {
-      fetchUserInfo();
-    } else {
-      setLoading(false);
-    }
-  }, [user_info]);
+    fetchUserInfo();
+  }, []);
 
   return (
     <html lang="en">
