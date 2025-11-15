@@ -13,4 +13,4 @@ export const authFetch = axios.create({
     withCredentials: true, // Ensures cookies are sent
 });
 
-export const gooogleOAuthFetch = process.env.DEV_OAUTH_REDIRECT_URI || process.env.PRODUCTION_OAUTH_REDIRECT_URI;
+export const gooogleOAuthFetch = `${process.env.DEV_OAUTH_REDIRECT_URI || process.env.PRODUCTION_OAUTH_REDIRECT_URI}`;
