@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaCartShopping } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
-import { authFetch } from "@/utils/helpers";
+import { authFetch, gooogleOAuthFetch } from "@/utils/helpers";
 import Image from "next/image";
 import LoadingSpinner from "./LoadingSpinner";
 
@@ -237,10 +237,7 @@ const CardNav = ({
                 </Link>
               ) : (
                 <Link
-                  href={
-                    process.env.PRODUCTION_OAUTH_REDIRECT_URI ||
-                    "http://localhost:8080/login/oauth2/code/google"
-                  }
+                  href={gooogleOAuthFetch}
                   className="flex items-center justify-center w-full h-full"
                   aria-label="Sign in"
                 >
@@ -317,8 +314,7 @@ const CardNav = ({
                 ) : (
                   <Link
                     href={
-                      process.env.PRODUCTION_OAUTH_REDIRECT_URI ||
-                      "http://localhost:8080/login/oauth2/code/google"
+                     gooogleOAuthFetch
                     }
                     className="nav-card-link text-sm md:text-base py-1 hover:opacity-70 transition-opacity duration-200"
                   >
