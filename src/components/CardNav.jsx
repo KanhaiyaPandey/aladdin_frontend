@@ -237,7 +237,7 @@ const CardNav = ({
                 </Link>
               ) : (
                 <Link
-                  href={gooogleOAuthFetch}
+                  href={process.env.NEXT_PUBLIC_PRODUCTION_OAUTH_REDIRECT_URI || 'https://aladdin-0kuf.onrender.com/login/oauth2/code/google'}
                   className="flex items-center justify-center w-full h-full"
                   aria-label="Sign in"
                 >
@@ -313,9 +313,7 @@ const CardNav = ({
                   </>
                 ) : (
                   <Link
-                    href={
-                     gooogleOAuthFetch
-                    }
+                    href={process.env.NEXT_PUBLIC_PRODUCTION_OAUTH_REDIRECT_URI || 'https://aladdin-0kuf.onrender.com/login/oauth2/code/google'}
                     className="nav-card-link text-sm md:text-base py-1 hover:opacity-70 transition-opacity duration-200"
                   >
                     Login / Sign Up
