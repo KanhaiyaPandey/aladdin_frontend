@@ -22,12 +22,6 @@ export default function LayoutClient({ categories, children }) {
     const fetchUserInfo = async () => {
       setLoading(true);
       try {
-        const cached = localStorage.getItem("user_info");
-        if (cached) {
-          setUserInfo(JSON.parse(cached));
-          setLoading(false);
-          return;
-        }
         const response = await authFetch.get("/validate-token");
         const userData = response?.data?.data || null;
         setUserInfo(userData);
@@ -44,7 +38,6 @@ export default function LayoutClient({ categories, children }) {
         setLoading(false);
       }
     };
-
     fetchUserInfo();
   }, []);
 

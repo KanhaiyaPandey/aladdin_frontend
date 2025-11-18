@@ -1,7 +1,7 @@
 import { customerFetch } from "@/utils/helpers";
 import { message } from "antd";
 import Modal from "antd/es/modal/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 
@@ -10,6 +10,10 @@ import { MdDelete } from "react-icons/md";
 const InfoCards = ({ user, setUser, handleUpdate }) => {
   const [openModal, setOpenModal] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+
+  useEffect(() => {
+
+  }, []);
 
   const [newAddress, setNewAddress] = useState({
     street: "",
@@ -109,7 +113,10 @@ const InfoCards = ({ user, setUser, handleUpdate }) => {
                 <p>{address.country}</p>
                 <p>Mobile: {address.alternateNumber}</p>
                 <div className=" flex w-full items-center justify-between">
-                  <p>Status: {address.active ? "Active" : "Inactive"}</p>
+                  <p className=" flex gap-2 items-center">
+                    <span>Status:</span>
+                    <span className={` px-2 rounded-md ${address.active ? " bg-green-500 text-white" : " bg-slate-400 text-black"} `}>{address.active ? "Active" : "Inactive"}</span>
+                   </p>
                   <p className=" flex items-center gap-4">
                     <button><CiEdit/></button>
                     <button><MdDelete/></button>
