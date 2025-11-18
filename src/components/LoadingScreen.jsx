@@ -15,7 +15,7 @@ const LoadingScreen = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="text-2xl font-semibold tracking-wider"
       >
-        Loading...
+        Aladdin...
       </motion.div>
 
       <motion.div

@@ -6,6 +6,8 @@ import CardNav from "../components/CardNav";
 import { authFetch } from "@/utils/helpers";
 import LoadingScreen from "@/components/LoadingScreen";
 import NProgress from "nprogress";
+import Footer from "@/components/Footer";
+import { UserContext } from "@/context/UserContext";
 
 NProgress.configure({ showSpinner: false });
 
@@ -46,7 +48,6 @@ export default function LayoutClient({ categories, children }) {
     fetchUserInfo();
   }, []);
 
-  // Show loading screen when isPending changes
   useEffect(() => {
     if (isPending) {
       NProgress.start();
@@ -57,7 +58,6 @@ export default function LayoutClient({ categories, children }) {
     }
   }, [isPending]);
 
-  // Intercept Link clicks and wrap in startTransition
   useEffect(() => {
     const handleClick = (e) => {
       const link = e.target.closest("a[href]");
@@ -79,16 +79,19 @@ export default function LayoutClient({ categories, children }) {
   }, [router]);
 
   return (
-    <div className="relative w-full flex flex-col items-center font-michroma justify-center hide-scrollbar">
-      {showLoadingScreen && <LoadingScreen />}
-      <div className="sticky top-0 w-[90%] max-w-[800px] z-50">
-        <CardNav
-          user_info={user_info}
-          loading={loading}
-          categories={categories}
-        />
+    <UserContext.Provider value={{ user_info, setUserInfo, loading }}>
+      <div className="relative w-full flex flex-col items-center font-michroma justify-center hide-scrollbar">
+        {showLoadingScreen && <LoadingScreen />}
+        <div className="sticky top-0 w-[90%] max-w-[800px] z-50">
+          <CardNav
+            user_info={user_info}
+            loading={loading}
+            categories={categories}
+          />
+        </div>
+        <main className="w-full">{children}</main>
+        <Footer />
       </div>
-      <main className="w-full">{children}</main>
-    </div>
+    </UserContext.Provider>
   );
 }
