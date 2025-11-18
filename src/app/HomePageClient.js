@@ -110,9 +110,6 @@ export default function HomePageClient({ categories, products }) {
         fadeInVariant={fadeInVariant}
         containerVariant={containerVariant}
       />
-
-       <Footer />
-
     </div>
   );
 }
