@@ -13,6 +13,9 @@
   --font-michroma: 'Michroma', sans-serif;
 }
 
+.ant-spin-dot-item {
+  background-color: black !important;
+}
 /* Optional: set as default body font */
 
 

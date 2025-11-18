@@ -2,8 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { CiHeart } from "react-icons/ci";
 import clsx from "clsx";
-import { Modal } from "antd";
+import { message, Modal, Spin } from "antd";
 import { motion } from "framer-motion";
+import CartDrawer from "./CartDrawer";
+import { useUser } from "@/context/UserContext";
+import { customerFetch } from "@/utils/helpers";
 
 const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
   if (!product) return null;
@@ -17,6 +20,16 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
   });
 
   const [open, setOpen] = useState(false);
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const {user_info, setUserInfo} = useUser();
+  const [cart, setCart] = useState(user_info?.cartItems || []);
+
+  useEffect(() => {
+    setCart(user_info?.cartItems || []);
+    console.log("user = ", user_info);
+    
+  }, [user_info]);
 
   // Refs + constraints for per-attribute small-screen carousels
   const carouselRefs = useRef([]);
@@ -40,8 +53,66 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
     return () => window.removeEventListener("resize", update);
   }, []);
 
+
+
+      const handleAddToCart = async () => {
+          if (!selectedVariant) return;
+          setLoading(true);
+          const newItem = {
+            productId: product.productId,
+            variantId: selectedVariant.variantId,
+            title: product.title,
+            attributes: product.attributes || [],
+            options: selectedVariant.options || [],
+            quantity: 1,
+            price: selectedVariant.sellPrice,
+          };
+
+          // Clone current cart
+          let updatedCart = [...(cart || [])];
+
+          // Check if variant already exists
+          const existingIndex = updatedCart.findIndex(
+            (item) => item.variantId === newItem.variantId
+          );
+
+        if (existingIndex !== -1) {
+          // Increase quantity
+          updatedCart[existingIndex] = {
+            ...updatedCart[existingIndex],
+            quantity: updatedCart[existingIndex].quantity + 1,
+          };
+        } else {
+          // Add new item
+          updatedCart.push(newItem);
+        }
+
+        // Update local state + context
+        setCart(updatedCart);
+        const updatedUserInfo = {
+          ...user_info,
+          cartItems: updatedCart,
+        };
+
+        try {
+
+         const response = await customerFetch.put("/update-cart", updatedCart)
+          setLoading(false);
+          localStorage.setItem("user_info", JSON.stringify(response.data.data));
+          setUserInfo({
+          ...user_info,
+          cartItems: updatedCart,
+        });  
+         message.success("Cart updated successfully");
+        } catch (error) {
+          message.error("Failed to update cart. Please try again.");
+          setLoading(false);
+        }
+
+      };
+
   return (
-    <div className="w-full lg:w-3/4 py-2 grid grid-cols-1 gap-6 font-slussen max-w-4xl mx-auto overflow-hidden">
+    <div className="w-full relative lg:w-3/4 py-2 grid grid-cols-1 gap-6 font-slussen max-w-4xl mx-auto overflow-hidden">
       {/* === Top Section === */}
       <div className="flex flex-row w-full items-start justify-between gap-4">
         <div className="w-full md:w-8/12 flex flex-col gap-2">
@@ -254,10 +325,20 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                   </div>
                 ))}
 
-                <div className="flex flex-col gap-4">
-                  <button className="bg-black text-white text-sm w-full p-4 rounded">
-                    Add to Cart
-                  </button>
+                <div className="flex flex-col gap-4 relative overflow-hidden group ">
+                 <button
+                      onClick={handleAddToCart}
+                      className="text-black text-sm w-full p-4 rounded border flex items-center justify-center"
+                    >
+                      {loading ? (
+                        <Spin size="small" />
+                      ) : (
+                        'Add to cart'
+                      )}
+                    </button>
+                  <div className=" absolute text-sm top-0 z-10 bg-black bottom-0 rounded left-0 group-hover:-translate-y-14 duration-300 transition-all ease-out right-0 text-white flex items-center justify-center">
+                      <span>Add to cart</span>
+                  </div>
                 </div>
 
                 <div className="w-full">
@@ -266,6 +347,8 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                   </h1>
                 </div>
               </div>
+
+             <CartDrawer cartDrawerOpen={cartDrawerOpen} setCartDrawerOpen={setCartDrawerOpen}/>
     </div>
   );
 };

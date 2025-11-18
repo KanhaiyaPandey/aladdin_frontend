@@ -50,14 +50,9 @@ const InfoCards = ({ user, setUser, handleUpdate }) => {
         ...user,
         addresses: updatedAddresses,
       };
-
-      // Update local state
-      setUser(updatedUser);
-
       // Send updated user to backend
       await handleAddressUpdate(updatedUser);
-
-      // Reset modal
+      setUser(updatedUser);
       setOpenModal(false);
       setNewAddress({
         street: "",
