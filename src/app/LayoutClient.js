@@ -73,16 +73,20 @@ export default function LayoutClient({ categories, children }) {
 
   return (
     <UserContext.Provider value={{ user_info, setUserInfo, loading }}>
-      <div className="relative w-full flex flex-col items-center font-michroma justify-center hide-scrollbar">
+      <div className="relative w-full min-h-screen flex flex-col font-michroma">
         {showLoadingScreen && <LoadingScreen />}
-        <div className="sticky top-0 w-[90%] max-w-[800px] z-50">
-          <CardNav
-            user_info={user_info}
-            loading={loading}
-            categories={categories}
-          />
+        <div className="sticky top-0 w-full z-50">
+          <div className="flex justify-center">
+            <div className="w-[90%] max-w-[800px]">
+              <CardNav
+                user_info={user_info}
+                loading={loading}
+                categories={categories}
+              />
+            </div>
+          </div>
         </div>
-        <main className="w-full">{children}</main>
+        <main className="w-full flex-1">{children}</main>
         <Footer />
       </div>
     </UserContext.Provider>

@@ -5,6 +5,7 @@ import Hero from "../components/Home/Hero";
 import Products from "../components/Home/Products";
 import Categories from "../components/Home/Categories";
 import LoadingScreen from "../components/LoadingScreen";
+import Footer from "@/components/Footer";
 
 export default function HomePageClient({ categories, products }) {
   const [dark, setDark] = useState(false);
@@ -110,7 +111,7 @@ export default function HomePageClient({ categories, products }) {
         containerVariant={containerVariant}
       />
 
-      {/* Footer */}
+       <Footer />
 
     </div>
   );
