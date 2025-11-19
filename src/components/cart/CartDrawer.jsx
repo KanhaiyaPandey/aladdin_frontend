@@ -1,15 +1,33 @@
 import { useUser } from "@/context/UserContext";
+import { customerFetch } from "@/utils/helpers";
+import { message } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { useEffect } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 
 const CartDrawer = () => {
-  const { drawerOpen, setDrawerOpen, user_info } = useUser();
+  const { drawerOpen, setDrawerOpen, user_info, setUserInfo } = useUser();
+  const [loadingIndex, setLoadingIndex] = useState(null);
+  const drawerRef = useRef(null);
 
-  useEffect(() => {
-    console.log("user:", user_info);
-  }, [user_info]);
+
+    useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (drawerRef.current && !drawerRef.current.contains(e.target)) {
+        setDrawerOpen(false);
+      }
+    };
+
+    if (drawerOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [drawerOpen, setDrawerOpen]);
+
+
 
   // Drawer popup animation
   const popupVariants = {
@@ -48,10 +66,27 @@ const CartDrawer = () => {
     },
   };
 
+
+  const handleRemoveItem = async (index) => {
+    setLoadingIndex(index);
+    const updatedCart = user_info.cartItems.filter((_, i) => i !== index);
+    const updatedUserInfo = { ...user_info, cartItems: updatedCart };
+    try {
+        const response = await customerFetch.put("/update-cart", updatedCart)
+        setUserInfo(updatedUserInfo);
+        localStorage.setItem("user_info", JSON.stringify(updatedUserInfo));
+         setLoadingIndex(null);
+    } catch (error) {
+        message.error("Failed to remove item from cart.");
+    }
+ 
+  }
+
   return (
     <AnimatePresence>
       {drawerOpen && (
         <motion.div
+          ref={drawerRef}
           variants={popupVariants}
           initial="hidden"
           animate="visible"
@@ -100,14 +135,15 @@ const CartDrawer = () => {
                       transition-shadow max-md:p-2
                     "
                   >
-                    <div className="flex items-start gap-3">
+                    <Link href={`/product/${item?.productId}?variantid=${item?.variantId}`} className="flex items-start gap-3">
                       {/* Product Image */}
                       <Image
                         src={item?.image}
                         alt={item?.name}
                         width={55}
                         height={55}
-                        className="rounded-lg border shadow-sm object-cover "
+                        className="rounded-lg border shadow-sm object-cover"
+                        
                       />
 
                       {/* Content */}
@@ -122,7 +158,7 @@ const CartDrawer = () => {
                           ))}
                         </div>
 
-                        <div className="flex justify-between items-center mt-1 max-md:text-xs">
+                        <div className="flex justify-between items-center max-md:text-xs">
                           <span className="text-sm text-black max-md:text-xs">
                             Qty: <span className="font-medium">{item.quantity}</span>
                           </span>
@@ -135,7 +171,17 @@ const CartDrawer = () => {
                           </span>
                         </div>
                       </div>
-                    </div>
+                    </Link>
+                   <button
+                        className="w-full border bg-red-200 text-xs p-1 mt-2 rounded-md flex justify-center items-center hover:bg-red-300 transition-all duration-300 ease-in-out"
+                        onClick={() => handleRemoveItem(index)}
+                        >
+                        {loadingIndex === index ? (
+                            "Removing..."
+                        ) : (
+                            <span className="text-red-600 font-medium">Remove Item</span>
+                        )}
+                        </button>
                   </motion.li>
                 ))}
               </motion.ul>
