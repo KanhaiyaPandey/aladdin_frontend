@@ -8,12 +8,14 @@ import LoadingScreen from "@/components/LoadingScreen";
 import NProgress from "nprogress";
 import Footer from "@/components/Footer";
 import { UserContext } from "@/context/UserContext";
+import CartDrawer from "@/components/cart/CartDrawer";
 
 NProgress.configure({ showSpinner: false });
 
 export default function LayoutClient({ categories, children }) {
   const [user_info, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -72,7 +74,7 @@ export default function LayoutClient({ categories, children }) {
   }, [router]);
 
   return (
-    <UserContext.Provider value={{ user_info, setUserInfo, loading }}>
+    <UserContext.Provider value={{ user_info, setUserInfo, loading, drawerOpen, setDrawerOpen }}>
       <div className="relative w-full min-h-screen flex flex-col font-michroma">
         {showLoadingScreen && <LoadingScreen />}
         <div className="sticky top-0 w-full z-50">
@@ -88,6 +90,7 @@ export default function LayoutClient({ categories, children }) {
         </div>
         <main className="w-full flex-1">{children}</main>
         <Footer />
+        <CartDrawer />
       </div>
     </UserContext.Provider>
   );

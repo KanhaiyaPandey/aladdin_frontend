@@ -7,6 +7,7 @@ import { FaUser } from "react-icons/fa";
 import { authFetch, gooogleOAuthFetch } from "@/utils/helpers";
 import Image from "next/image";
 import LoadingSpinner from "./LoadingSpinner";
+import { Badge } from "antd";
 
 const CardNav = ({
   items,
@@ -252,7 +253,10 @@ const CardNav = ({
               style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
             >
               <span>
-                <FaCartShopping />
+               
+                    <Badge count={user_info?.cartItems?.length || 0} size="small" offset={[0, 0]} showZero>
+                       <FaCartShopping size={20} />
+                  </Badge>
               </span>
             </Link>
           </div>

@@ -4,7 +4,6 @@ import { CiHeart } from "react-icons/ci";
 import clsx from "clsx";
 import { message, Modal, Spin } from "antd";
 import { motion } from "framer-motion";
-import CartDrawer from "./CartDrawer";
 import { useUser } from "@/context/UserContext";
 import { customerFetch } from "@/utils/helpers";
 
@@ -20,9 +19,8 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
   });
 
   const [open, setOpen] = useState(false);
-  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {user_info, setUserInfo} = useUser();
+  const {user_info, setUserInfo, setDrawerOpen } = useUser();
   const [cart, setCart] = useState(user_info?.cartItems || []);
 
   useEffect(() => {
@@ -65,6 +63,7 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
             attributes: product.attributes || [],
             options: selectedVariant.options || [],
             quantity: 1,
+            image:selectedVariant?.variantMedias?.[0]?.url || product?.productMedias?.[0]?.url || "",
             price: selectedVariant.sellPrice,
           };
 
@@ -98,11 +97,13 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
 
          const response = await customerFetch.put("/update-cart", updatedCart)
           setLoading(false);
+          setDrawerOpen(true);
           localStorage.setItem("user_info", JSON.stringify(response.data.data));
           setUserInfo({
           ...user_info,
           cartItems: updatedCart,
-        });  
+        }); 
+        
          message.success("Cart updated successfully");
         } catch (error) {
           message.error("Failed to update cart. Please try again.");
@@ -347,8 +348,6 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                   </h1>
                 </div>
               </div>
-
-             <CartDrawer cartDrawerOpen={cartDrawerOpen} setCartDrawerOpen={setCartDrawerOpen}/>
     </div>
   );
 };
