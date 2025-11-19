@@ -328,6 +328,7 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
 
                 <div className="flex flex-col gap-4 relative overflow-hidden group ">
                  <button
+                      disabled={loading}
                       onClick={handleAddToCart}
                       className="text-black text-sm w-full p-4 rounded border flex items-center justify-center"
                     >
@@ -338,7 +339,11 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
                       )}
                     </button>
                   <div className=" absolute text-sm top-0 z-10 bg-black bottom-0 rounded left-0 group-hover:-translate-y-14 duration-300 transition-all ease-out right-0 text-white flex items-center justify-center">
-                      <span>Add to cart</span>
+                         {loading ? (
+                        <Spin size="small" />
+                      ) : (
+                        'Add to cart'
+                      )}
                   </div>
                 </div>
 
