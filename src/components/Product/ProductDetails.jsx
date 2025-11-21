@@ -121,7 +121,9 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
             {product?.title}
           </h1>
               <h2 className="font-semibold text-sm md:text-lg">
-                ₹{selectedVariant?.sellPrice}.00
+                ₹{Number(selectedVariant.sellPrice).toLocaleString("en-IN", {
+                   minimumFractionDigits: 2,
+                 })}
               </h2>
               <span className="text-xs text-gray-600">
                 MRP inclusive of all taxes
@@ -133,7 +135,8 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
             </div>
           </div>
 
-              {/* === Attributes Section === */}
+            {/* === Attributes Section === */}
+            
               <div className="flex flex-col gap-6">
                 {(product.attributes || []).map((attr, attrIndex) => (
                   <div key={attr} className="flex flex-col gap-2">

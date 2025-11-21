@@ -79,7 +79,7 @@ export default function LayoutClient({ categories, children }) {
         {showLoadingScreen && <LoadingScreen />}
         <div className="sticky top-0 w-full z-50">
           <div className="flex justify-center">
-            <div className="w-[90%] max-w-[800px]">
+            <div className="w-[90%] max-w-[800px] px-4">
               <CardNav
                 user_info={user_info}
                 loading={loading}

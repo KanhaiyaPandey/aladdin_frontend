@@ -13,7 +13,7 @@ const ProductCards = ({
 }) => {
   return (
     <div
-      className="flex-shrink-0 w-48 group carousel-item"
+      className="flex-shrink-0 w-48 group carousel-item font-slussen"
       style={{
         scrollSnapAlign: "start",
         contain: "layout style paint",
@@ -90,8 +90,11 @@ const ProductCards = ({
         }
         className="mt-2 text-start flex flex-col gap-1"
       >
-        <h3 className="text-xs truncate">{product.title}</h3>
-        <p className="text-xs font-medium">₹{product.sellPrice}/-</p>
+        <h3 className="text-xs truncate ">{product.title}</h3>
+        <p className="text-xs font-medium">₹
+          {Number(product.sellPrice).toLocaleString("en-IN", {
+                   minimumFractionDigits: 2,
+                 })}</p>
       </Link>
     </div>
   );

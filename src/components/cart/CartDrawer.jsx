@@ -95,14 +95,14 @@ const CartDrawer = () => {
             fixed z-40 rounded-xl border bg-[#2726263d] backdrop-blur-sm
 
             /* Desktop */
-            top-32 right-10 w-[30rem] h-[30rem] p-3
+            top-24 right-24 w-[30rem]  p-3
 
             /* Tablet */
-            md:w-[24rem] md:right-6
+            md:w-[30rem] md:right-10
 
             /* Mobile */
             max-md:top-20 max-md:right-0 max-md:left-0 max-md:w-[95%] max-md:mx-auto 
-            max-md:h-[26rem] max-md:p-2
+             max-md:p-2
           "
         >
           {/* Header */}
@@ -117,7 +117,7 @@ const CartDrawer = () => {
           </div>
 
           {/* Items */}
-          <div className="mt-2 overflow-y-auto h-[26rem] max-md:h-[22rem] hide-scrollbar">
+          <div className="mt-2 overflow-y-auto h-[26rem] max-md:h-[22rem] rounded-md hide-scrollbar">
             {user_info?.cartItems?.length > 0 ? (
               <motion.ul
                 className="flex flex-col gap-3 font-slussen"
@@ -188,6 +188,14 @@ const CartDrawer = () => {
             ) : (
               <p className="text-gray-600 text-center py-4">Your cart is empty.</p>
             )}
+          </div>
+
+          <div className=" w-full  p-2 rounded-md mt-2">
+
+              <Link href="/cart" className="w-full flex p-2 justify-center items-center bg-green-400 text-black border rounded-md">
+                Go to Cart
+              </Link>
+     
           </div>
         </motion.div>
       )}

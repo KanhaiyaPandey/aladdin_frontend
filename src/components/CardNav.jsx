@@ -8,6 +8,8 @@ import { authFetch, gooogleOAuthFetch } from "@/utils/helpers";
 import Image from "next/image";
 import LoadingSpinner from "./LoadingSpinner";
 import { Badge } from "antd";
+import { BsCart2 } from "react-icons/bs";
+
 
 const CardNav = ({
   items,
@@ -154,7 +156,7 @@ const CardNav = ({
 
   return (
     <div
-      className={`card-nav-container  absolute left-1/2 -translate-x-1/2  w-[80vw]  z-[99] top-[0.5em] md:top-[1em] ${className}`}
+      className={`card-nav-container  absolute left-1/2 -translate-x-1/2  w-[95vw]  z-[99] top-[0.5em] md:top-[1em] ${className}`}
     >
       <nav
         ref={navRef}
@@ -255,7 +257,7 @@ const CardNav = ({
               <span>
                
                     <Badge count={user_info?.cartItems?.length || 0} size="small" offset={[0, 0]} showZero>
-                       <FaCartShopping size={20} />
+                       <BsCart2 size={22} />
                   </Badge>
               </span>
             </Link>
@@ -324,11 +326,7 @@ const CardNav = ({
                   </Link>
                 )}
               </div>
-
-              </div>
-
-
-
+            </div>
         </div>
       </nav>
     </div>
