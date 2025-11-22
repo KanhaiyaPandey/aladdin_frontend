@@ -240,7 +240,7 @@ const CardNav = ({
                 </Link>
               ) : (
                 <Link
-                  href={process.env.NEXT_PUBLIC_PRODUCTION_OAUTH_REDIRECT_URI || 'https://aladdin-0kuf.onrender.com/login/oauth2/code/google'}
+                  href="/auth/login?redirectTo=/account"
                   className="flex items-center justify-center w-full h-full"
                   aria-label="Sign in"
                 >

@@ -92,7 +92,7 @@ const CartDrawer = () => {
           animate="visible"
           exit="exit"
           className="
-            fixed z-40 rounded-xl border bg-[#2726263d] backdrop-blur-sm
+            fixed z-40 rounded-xl border bg-[#1b1b1b3d] backdrop-blur-md shadow-md
 
             /* Desktop */
             top-24 right-24 w-[30rem]  p-3
@@ -120,7 +120,7 @@ const CartDrawer = () => {
           <div className="mt-2 overflow-y-auto h-[26rem] max-md:h-[22rem] rounded-md hide-scrollbar">
             {user_info?.cartItems?.length > 0 ? (
               <motion.ul
-                className="flex flex-col gap-3 font-slussen"
+                className="flex flex-col gap-3 font-slussen text-white"
                 variants={listContainer}
                 initial="hidden"
                 animate="visible"
@@ -131,7 +131,7 @@ const CartDrawer = () => {
                     variants={listItem}
                     className="
                       p-3 rounded-xl bg-white/20 border border-white/30 
-                      backdrop-blur-md shadow-sm hover:shadow-md 
+                      backdrop-blur-lg shadow-sm hover:shadow-md 
                       transition-shadow max-md:p-2
                     "
                   >
@@ -152,18 +152,18 @@ const CartDrawer = () => {
                           {item?.title}
                         </span>
 
-                        <div className="text-xs text-black flex flex-col gap-0.5">
+                        <div className="text-xs flex flex-col gap-0.5">
                           {item?.options?.map((option, idx) => (
                             <span key={idx}>• {option}</span>
                           ))}
                         </div>
 
                         <div className="flex justify-between items-center max-md:text-xs">
-                          <span className="text-sm text-black max-md:text-xs">
+                          <span className="text-sm  max-md:text-xs">
                             Qty: <span className="font-medium">{item.quantity}</span>
                           </span>
 
-                          <span className="text-sm font-semibold text-black max-md:text-xs">
+                          <span className="text-sm font-semibold  max-md:text-xs">
                             ₹
                             {Number(item.price).toLocaleString("en-IN", {
                               minimumFractionDigits: 2,
@@ -173,13 +173,13 @@ const CartDrawer = () => {
                       </div>
                     </Link>
                    <button
-                        className="w-full border bg-red-200 text-xs p-1 mt-2 rounded-md flex justify-center items-center hover:bg-red-300 transition-all duration-300 ease-in-out"
+                        className="w-full border border-black bg-[#FF5555] text-xs p-2 mt-2 rounded-md flex justify-center items-center hover:bg-[#FF937E] transition-all duration-300 ease-in-out"
                         onClick={() => handleRemoveItem(index)}
                         >
                         {loadingIndex === index ? (
                             "Removing..."
                         ) : (
-                            <span className="text-red-600 font-medium">Remove Item</span>
+                            <span className=" font-bold">Remove Item</span>
                         )}
                         </button>
                   </motion.li>
@@ -192,7 +192,7 @@ const CartDrawer = () => {
 
           <div className=" w-full  p-2 rounded-md mt-2">
 
-              <Link href="/cart" className="w-full flex p-2 justify-center items-center bg-green-400 text-black border rounded-md">
+              <Link href="/cart" className="w-full  flex p-2 justify-center items-center bg-[#658C58] text-white border rounded-md">
                 Go to Cart
               </Link>
      

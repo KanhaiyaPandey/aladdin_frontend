@@ -9,16 +9,20 @@ import NProgress from "nprogress";
 import Footer from "@/components/Footer";
 import { UserContext } from "@/context/UserContext";
 import CartDrawer from "@/components/cart/CartDrawer";
+import { usePathname } from "next/navigation";
 
 NProgress.configure({ showSpinner: false });
 
 export default function LayoutClient({ categories, children }) {
+
   const [user_info, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const pathname = usePathname();
+  const hideNav = pathname.startsWith("/auth");
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -77,7 +81,7 @@ export default function LayoutClient({ categories, children }) {
     <UserContext.Provider value={{ user_info, setUserInfo, loading, drawerOpen, setDrawerOpen }}>
       <div className="relative w-full min-h-screen flex flex-col font-michroma">
         {showLoadingScreen && <LoadingScreen />}
-        <div className="sticky top-0 w-full z-50">
+         <div className={`${hideNav ? "hidden" : ""} sticky top-0 w-full z-50`}>
           <div className="flex justify-center">
             <div className="w-[90%] max-w-[800px] px-4">
               <CardNav
