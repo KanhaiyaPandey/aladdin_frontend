@@ -20,18 +20,16 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {user_info, setUserInfo, setDrawerOpen } = useUser();
-  const [cart, setCart] = useState(user_info?.cartItems || []);
+  const {user_info, setUserInfo, setDrawerOpen, cart, setCart  } = useUser();
 
-  useEffect(() => {
-    setCart(user_info?.cartItems || []);
-    console.log("user = ", user_info);
-    
-  }, [user_info]);
-
-  // Refs + constraints for per-attribute small-screen carousels
   const carouselRefs = useRef([]);
   const [dragConstraintsMap, setDragConstraintsMap] = useState({});
+
+  useEffect(() =>{
+    console.log("cart state:", cart);
+    
+  }, [cart])
+
 
   useEffect(() => {
     const update = () => {
@@ -66,48 +64,41 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
             image:selectedVariant?.variantMedias?.[0]?.url || product?.productMedias?.[0]?.url || "",
             price: selectedVariant.sellPrice,
           };
-
-          // Clone current cart
           let updatedCart = [...(cart || [])];
-
-          // Check if variant already exists
           const existingIndex = updatedCart.findIndex(
             (item) => item.variantId === newItem.variantId
           );
 
         if (existingIndex !== -1) {
-          // Increase quantity
           updatedCart[existingIndex] = {
             ...updatedCart[existingIndex],
             quantity: updatedCart[existingIndex].quantity + 1,
           };
         } else {
-          // Add new item
           updatedCart.push(newItem);
         }
-
-        // Update local state + context
         setCart(updatedCart);
         const updatedUserInfo = {
           ...user_info,
           cartItems: updatedCart,
         };
-
+        localStorage.setItem("guest_cart", JSON.stringify(updatedCart));
+        if(!user_info){
+         localStorage.setItem("guest_cart", JSON.stringify(updatedCart));
+          setDrawerOpen(true);
+          setLoading(false);
+          return;  
+        }
         try {
-
-         const response = await customerFetch.put("/update-cart", updatedCart)
+          await customerFetch.put("/update-cart", updatedCart)     
           setLoading(false);
           setDrawerOpen(true);
-          localStorage.setItem("user_info", JSON.stringify(response.data.data));
           setUserInfo({
           ...user_info,
           cartItems: updatedCart,
-        }); 
-        
-         message.success("Cart updated successfully");
+        });   
         } catch (error) {
-          message.error("Failed to update cart. Please try again.");
-          setLoading(false);
+           console.log(error);    
         }
 
       };

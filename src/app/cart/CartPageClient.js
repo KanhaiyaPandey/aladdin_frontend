@@ -1,13 +1,16 @@
 'use client'
 
+import CartItmes from "@/components/cart/CartItems";
+import CheckoutOptions from "@/components/cart/CheckoutOptions";
 import { useUser } from "@/context/UserContext"
 
 
 const CartPageClient = () => {
     const {user_info, setUserInfo} = useUser();
   return (
-    <div className=" grid md:grid-cols-3 grid-cols-1 items-center justify-center w-full ">
-        
+    <div className=" flex items-start justify-center w-11/12 text-black relative">
+         <CartItmes/>
+         <CheckoutOptions/>
     </div>
   )
 }

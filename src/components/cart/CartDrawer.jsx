@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 
 const CartDrawer = () => {
-  const { drawerOpen, setDrawerOpen, user_info, setUserInfo } = useUser();
+  const { drawerOpen, setDrawerOpen, user_info, setUserInfo, cart, setCart } = useUser();
   const [loadingIndex, setLoadingIndex] = useState(null);
   const drawerRef = useRef(null);
 
@@ -73,13 +73,12 @@ const CartDrawer = () => {
     const updatedUserInfo = { ...user_info, cartItems: updatedCart };
     try {
         const response = await customerFetch.put("/update-cart", updatedCart)
-        setUserInfo(updatedUserInfo);
-        localStorage.setItem("user_info", JSON.stringify(updatedUserInfo));
+         setUserInfo(updatedUserInfo);
+         setCart(updatedCart);
          setLoadingIndex(null);
     } catch (error) {
         message.error("Failed to remove item from cart.");
     }
- 
   }
 
   return (
@@ -118,14 +117,14 @@ const CartDrawer = () => {
 
           {/* Items */}
           <div className="mt-2 overflow-y-auto h-[26rem] max-md:h-[22rem] rounded-md hide-scrollbar">
-            {user_info?.cartItems?.length > 0 ? (
+            {cart?.length > 0 ? (
               <motion.ul
                 className="flex flex-col gap-3 font-slussen text-white"
                 variants={listContainer}
                 initial="hidden"
                 animate="visible"
               >
-                {user_info.cartItems.map((item, index) => (
+                {cart?.map((item, index) => (
                   <motion.li
                     key={index}
                     variants={listItem}
@@ -190,9 +189,9 @@ const CartDrawer = () => {
             )}
           </div>
 
-          <div className=" w-full  p-2 rounded-md mt-2">
+          <div className=" w-full py-2 rounded-md mt-2">
 
-              <Link href="/cart" className="w-full  flex p-2 justify-center items-center bg-[#658C58] text-white border rounded-md">
+              <Link href="/cart" className="w-full  flex p-2 justify-center items-center bg-green-800 text-white border rounded-md">
                 Go to Cart
               </Link>
      

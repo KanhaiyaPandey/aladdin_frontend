@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import CardNav from "../components/CardNav";
-import { authFetch } from "@/utils/helpers";
+import { authFetch, customerFetch } from "@/utils/helpers";
 import LoadingScreen from "@/components/LoadingScreen";
 import NProgress from "nprogress";
 import Footer from "@/components/Footer";
@@ -16,6 +16,7 @@ NProgress.configure({ showSpinner: false });
 export default function LayoutClient({ categories, children }) {
 
   const [user_info, setUserInfo] = useState(null);
+  const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
@@ -31,21 +32,47 @@ export default function LayoutClient({ categories, children }) {
         const response = await authFetch.get("/validate-token");
         const userData = response?.data?.data || null;
         setUserInfo(userData);
-        if (userData) {
-          localStorage.setItem("user_info", JSON.stringify(userData));
-        } else {
-          localStorage.removeItem("user_info");
-        }
+        await mergeCart(userData);
       } catch (error) {
         console.error("Error fetching user info:", error);
         setUserInfo(null);
-        localStorage.removeItem("user_info");
       } finally {
         setLoading(false);
       }
     };
     fetchUserInfo();
   }, []);
+
+const mergeCart = async (user) => {
+  if (!user) return;
+  const localCart = JSON.parse(localStorage.getItem("guest_cart") || "[]");
+  const serverCart = user.cartItems || [];
+  if (localCart.length === 0) return; // nothing to merge
+  const merged = [...serverCart];
+  localCart.forEach((localItem) => {
+    const existingIndex = merged.findIndex(
+      (item) =>
+        item.productId === localItem.productId &&
+        item.variantId === localItem.variantId
+    );
+    if (existingIndex !== -1) {
+      merged[existingIndex].quantity += localItem.quantity;
+    } else {
+      merged.push(localItem);
+    }
+  });
+  setCart(merged);
+  try {
+    await customerFetch.put("/update-cart", merged);
+    const updatedUser = { ...user, cartItems: merged };
+    setUserInfo(updatedUser);
+    setguestCart([]);
+    localStorage.removeItem("guest_cart");
+  } catch (e) {
+    console.error("Error merging cart:", e);
+  }
+};
+
 
   useEffect(() => {
     if (isPending) {
@@ -78,7 +105,7 @@ export default function LayoutClient({ categories, children }) {
   }, [router]);
 
   return (
-    <UserContext.Provider value={{ user_info, setUserInfo, loading, drawerOpen, setDrawerOpen }}>
+    <UserContext.Provider value={{ user_info, setUserInfo,cart,setCart,loading, drawerOpen, setDrawerOpen }}>
       <div className="relative w-full min-h-screen flex flex-col font-michroma">
         {showLoadingScreen && <LoadingScreen />}
          <div className={`${hideNav ? "hidden" : ""} sticky top-0 w-full z-50`}>

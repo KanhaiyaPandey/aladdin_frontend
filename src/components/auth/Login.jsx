@@ -24,7 +24,7 @@ const Login = () => {
 
   
   return (
-    <div className=' w-1/2 flex flex-col h-full items-center justify-center '>
+    <div className=' md:w-1/2 w-full p-5  flex flex-col h-full items-center justify-center '>
       
       <div className=' flex flex-col w-full gap-2'>
         <Link href={'/'} className=' text-6xl  font-bold font-font-lobster'>ALADDIN</Link>
@@ -50,7 +50,7 @@ const Login = () => {
            <span className=' text-[10px] text-gray-500'>By logging in with my social login, I agree to link my account in accordance with the Privacy Policy</span>
                <button 
                  onClick={() => {
-                    window.location.href = `${process.env.NEXT_PUBLIC_PRODUCTION_OAUTH_REDIRECT_URI}?redirectTo=${redirectTo}`;
+                    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user/google/login?redirectTo=${redirectTo}`;
                   }}
                className=' border font-light  p-2 text-xs text-gray-700  gap-2 rounded-md  transition-all flex items-center justify-center duration-300 ease-in-out uppercase'>
                 <FcGoogle size={18}/>

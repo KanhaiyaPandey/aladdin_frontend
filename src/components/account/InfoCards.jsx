@@ -74,7 +74,6 @@ const InfoCards = ({ user, setUser, handleUpdate }) => {
           localStorage.removeItem("user_info");
     try {
       const response = await customerFetch.put("/update-profile", updatedUser);
-      localStorage.setItem("user_info", JSON.stringify(response.data.data));
       setUser(response.data.data);
       message.success("Addresses updated successfully");
     } catch (error) {

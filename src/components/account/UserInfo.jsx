@@ -81,7 +81,6 @@ const UserInfo = ({
       console.log(response.data.data);
       setUserInfo(response.data.data);
       setUser(response.data.data);
-      localStorage.setItem("user_info", JSON.stringify(response.data.data));
       setHasChanges(false);
       setEditing({ name: false, email: false });
     } catch (error) {
@@ -150,8 +149,6 @@ const UserInfo = ({
       if (updated) {
         setUserInfo(updated);
         setUser(updated);
-        localStorage.setItem("user_info", JSON.stringify(updated));
-        // if server returns URL for profilePicture, use it
         if (updated.profilePicture) setImageUrl(updated.profilePicture);
       } else {
         console.warn("Image uploaded but no user data returned");
