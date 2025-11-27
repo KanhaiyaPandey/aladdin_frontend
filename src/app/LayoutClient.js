@@ -32,6 +32,7 @@ export default function LayoutClient({ categories, children }) {
         const response = await authFetch.get("/validate-token");
         const userData = response?.data?.data || null;
         setUserInfo(userData);
+        setCart(userData.cartItems);
         await mergeCart(userData);
       } catch (error) {
         console.error("Error fetching user info:", error);
@@ -62,11 +63,11 @@ const mergeCart = async (user) => {
     }
   });
   setCart(merged);
+  localStorage.setItem("guest_cart", []);
   try {
     await customerFetch.put("/update-cart", merged);
     const updatedUser = { ...user, cartItems: merged };
     setUserInfo(updatedUser);
-    setguestCart([]);
     localStorage.removeItem("guest_cart");
   } catch (e) {
     console.error("Error merging cart:", e);

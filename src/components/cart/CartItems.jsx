@@ -2,21 +2,31 @@ import { useUser } from "@/context/UserContext";
 import { message } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { customerFetch } from "@/utils/helpers";
 import { CiSquarePlus } from "react-icons/ci";
 import { CiSquareMinus } from "react-icons/ci";
+import {motion} from "framer-motion"
 
 
 
 const CartItems = () => {
-  const { user_info, setUserInfo } = useUser();
+  const { user_info, setUserInfo, setCart, cart } = useUser();
   const [loadingIndex, setLoadingIndex] = useState(null);
+
+  useEffect(() =>{
+       console.log("cart: ", cart);
+       
+  },[cart])
 
   const updateCart = async (updatedCart) => {
     try {
       await customerFetch.put("/update-cart", updatedCart);
       const updatedUserInfo = { ...user_info, cartItems: updatedCart };
+      if(!user_info) {
+          localStorage.setItem("guest_cart",JSON.stringify(updatedCart))
+      } 
+      setCart(updatedCart);
       setUserInfo(updatedUserInfo);
     } catch (err) {
       message.error("Something went wrong updating the cart.");
@@ -48,14 +58,14 @@ const CartItems = () => {
   };
 
   return (
-    <div className="w-8/12 flex items-center justify-center flex-col gap-4 p-5 font-slussen border-b border-gray-400 ">
+    <div className="w-8/12 flex items-center justify-center flex-col gap-4 py-4 font-slussen  border-gray-400 ">
 
-       <div className=" w-full border-b flex items-center justify-between border-gray-400 p-1">
+       <div className=" w-full border-b flex items-center justify-between border-gray-400 py-1">
         <span className=" text-xs">Your Selections</span>
        </div>
 
-      {user_info?.cartItems?.map((item, index) => (
-        <div key={index} className="w-full p-3 flex gap-3">
+      {cart.map((item, index) => (
+        <div key={index} className="w-full p-3 flex gap-3 border-b border-gray-400">
           
           {/* IMAGE ONLY → CLICKABLE */}
           <Link
@@ -73,9 +83,20 @@ const CartItems = () => {
 
           {/* TEXT + CONTROLS (NOT CLICKABLE) */}
           <div className="flex-1 flex flex-col gap-2 w-10/12">
+
+           <div className=" w-full flex items-center justify-between">
+
             <span className="text-base font-medium max-md:text-sm">
               {item?.title}
             </span>
+              <span className="text-sm font-semibold max-md:text-xs">
+                ₹
+                {Number(item.price).toLocaleString("en-IN", {
+                  minimumFractionDigits: 2,
+                })}
+              </span>
+           </div>
+     
 
             <div className="text-xs flex flex-col gap-0.5">
               {item?.options?.map((option, idx) => (
@@ -105,27 +126,62 @@ const CartItems = () => {
                    <CiSquarePlus/>
                 </button>
               </div>
-
-              {/* Price */}
-              <span className="text-sm font-semibold max-md:text-xs">
-                ₹
-                {Number(item.price).toLocaleString("en-IN", {
-                  minimumFractionDigits: 2,
-                })}
-              </span>
             </div>
 
             {/* REMOVE BUTTON */}
-            <button
-              className="w-full border border-black bg-[#FF5555] text-xs p-2 mt-2 rounded-md flex justify-center items-center hover:bg-[#FF937E] transition-all duration-300 ease-in-out font-bold disabled:opacity-50"
-              onClick={() => handleRemoveItem(index)}
-              disabled={loadingIndex === index}
-            >
-              {loadingIndex === index ? "Processing..." : "Remove Item"}
-            </button>
+
+            <div className=" flex w-full items-center gap-5">
+                  <motion.button
+                    className="relative text-xs py-1 mt-2 font-light disabled:opacity-50"
+                    onClick={() => handleRemoveItem(index)}
+                    disabled={loadingIndex === index}
+                    whileHover="hover"
+                    initial="rest"
+                    animate="rest"
+                  >
+                    {loadingIndex === index ? "Processing..." : "Remove Item"}
+
+                    {/* underline */}
+                    <motion.span
+                      className="absolute left-0 bottom-0 h-[1px] w-full bg-gray-500"
+                      variants={{
+                        rest: { scaleX: 0, originX: 0 },
+                        hover: { scaleX: 1, originX: 0 },
+                      }}
+                      transition={{ duration: 0.3 }}
+                    />
+              </motion.button>
+
+
+
+              <motion.button
+                    className="relative text-xs py-1 mt-2 font-light disabled:opacity-50"
+                    whileHover="hover"
+                    initial="rest"
+                    animate="rest"
+                  >
+                  
+                  Save for later
+
+                    {/* underline */}
+                    <motion.span
+                      className="absolute left-0 bottom-0 h-[1px] w-full bg-gray-500"
+                      variants={{
+                        rest: { scaleX: 0, originX: 0 },
+                        hover: { scaleX: 1, originX: 0 },
+                      }}
+                      transition={{ duration: 0.3 }}
+                    />
+              </motion.button>
+            </div>
+
           </div>
         </div>
       ))}
+
+      {cart.length === 0 && 
+         <h1>No Items</h1>
+       }
     </div>
   );
 };

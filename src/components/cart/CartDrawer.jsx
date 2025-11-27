@@ -12,6 +12,10 @@ const CartDrawer = () => {
   const [loadingIndex, setLoadingIndex] = useState(null);
   const drawerRef = useRef(null);
 
+  // useEffect(() =>{
+  //    setDrawerOpen(false);
+  // },[])
+
 
     useEffect(() => {
     const handleClickOutside = (e) => {

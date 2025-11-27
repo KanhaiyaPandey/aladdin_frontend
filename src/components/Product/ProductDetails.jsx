@@ -82,7 +82,6 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
           ...user_info,
           cartItems: updatedCart,
         };
-        localStorage.setItem("guest_cart", JSON.stringify(updatedCart));
         if(!user_info){
          localStorage.setItem("guest_cart", JSON.stringify(updatedCart));
           setDrawerOpen(true);

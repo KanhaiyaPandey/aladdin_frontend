@@ -204,7 +204,7 @@ const CardNav = ({
           </ul>
 
           <div className=" flex items-center md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 order-1 md:order-none">
-            <Link href="/" className="font-semibold">
+            <Link href="/" className="font-semibold text-2xl tracking-widest">
               ALADDIN
             </Link>
           </div>
