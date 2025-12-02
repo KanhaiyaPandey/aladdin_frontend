@@ -142,7 +142,7 @@ const CartDrawer = () => {
                       {/* Product Image */}
                       <Image
                         src={item?.image}
-                        alt={item?.name}
+                        alt={item?.name || "product image"}
                         width={55}
                         height={55}
                         className="rounded-lg border shadow-sm object-cover"

@@ -1,15 +1,22 @@
 import { customerFetch } from "@/utils/helpers";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import Modal from "antd/es/modal/Modal";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
+import { Input, Select } from "antd";
+import { FcApproval } from "react-icons/fc";
+import { LoadingOutlined } from '@ant-design/icons';
+import { MdError } from "react-icons/md";
+
+
 
 
 
 const InfoCards = ({ user, setUser, handleUpdate }) => {
   const [openModal, setOpenModal] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [postalStatus, setPostalStatus] = useState("idle");
 
   useEffect(() => {
 
@@ -81,6 +88,57 @@ const InfoCards = ({ user, setUser, handleUpdate }) => {
     }
   }
 
+
+    const verifyPincode = async (pincode) => {
+      if (!pincode || pincode.length !== 6) {
+        setPostalStatus("error");
+        return message.error("Enter a valid 6-digit pincode");
+      }
+
+      setPostalStatus("loading");
+
+      try {
+        const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+        const data = await res.json();
+
+        if (data[0].Status !== "Success" || !data[0].PostOffice?.length) {
+          setPostalStatus("error");
+          return message.error("Invalid pincode");
+        }
+
+        const info = data[0].PostOffice[0];
+
+        setNewAddress((prev) => ({
+          ...prev,
+          state: info.State,
+          country: info.Country,
+          city: info.District,
+        }));
+
+        setPostalStatus("success");
+        message.success("Pincode verified ✓");
+      } catch (err) {
+        console.error(err);
+        setPostalStatus("error");
+        message.error("Failed to verify pincode");
+      }
+    };
+
+    const getPostalIcon = () => {
+    switch (postalStatus) {
+      case "loading":
+        return <Spin indicator={<LoadingOutlined spin />} size="small" />;
+      case "success":
+        return <FcApproval size={20} />;
+      case "error":
+        return <MdError size={20} color="red" />;
+      default:
+        return null;
+    }
+  };
+
+
+
   return (
     <div className="px-6 py-3 w-full grid md:grid-cols-3 grid-cols-1 gap-6 mt-10">
       <div className="flex flex-col gap-5 w-full border rounded-md p-4 h-auto">
@@ -138,78 +196,77 @@ const InfoCards = ({ user, setUser, handleUpdate }) => {
           title="Add New Address"
         >
           <div className="flex flex-col gap-4">
-            <input
-              type="text"
+
+            <Input
               placeholder="Street and house number"
-              className="p-2 border rounded w-full"
               value={newAddress.street}
               onChange={(e) =>
                 setNewAddress((s) => ({ ...s, street: e.target.value }))
               }
             />
-            <input
-              type="text"
+
+            <Input
               placeholder="City"
-              className="p-2 border rounded w-full"
               value={newAddress.city}
-              onChange={(e) =>
-                setNewAddress((s) => ({ ...s, city: e.target.value }))
-              }
-            />
-            <input
-              type="text"
-              placeholder="State"
-              className="p-2 border rounded w-full"
-              value={newAddress.state}
-              onChange={(e) =>
-                setNewAddress((s) => ({ ...s, state: e.target.value }))
-              }
+          
             />
 
-            <input
-              type="text"
+            {/* PINCODE – triggers verification onBlur */}
+           <Input
               placeholder="Postal Code"
-              className="p-2 border rounded w-full"
               value={newAddress.postalCode}
-              onChange={(e) =>
-                setNewAddress((s) => ({ ...s, postalCode: e.target.value }))
-              }
+              maxLength={6}
+              suffix={getPostalIcon()}
+              onChange={(e) => {
+                const value = e.target.value;
+
+                setNewAddress((s) => ({ ...s, postalCode: value }));
+
+                // Reset status while typing
+                if (value.length < 6) {
+                  setPostalStatus("idle");
+                } else {
+                  setPostalStatus("loading");
+                }
+              }}
+              onBlur={() => verifyPincode(newAddress.postalCode)}
             />
 
-            <input
-              type="text"
+            {/* AUTO-FILLED STATE */}
+            <Input
+              placeholder="State"
+              value={newAddress.state}
+              
+            />
+
+            {/* AUTO-FILLED COUNTRY */}
+            <Input
               placeholder="Country"
-              className="p-2 border rounded w-full"
               value={newAddress.country}
-              onChange={(e) =>
-                setNewAddress((s) => ({ ...s, country: e.target.value }))
-              }
+              
             />
 
-            <input
-              type="text"
+            <Input
               placeholder="Mobile Number"
-              className="p-2 border rounded w-full"
               value={newAddress.alternateNumber}
               onChange={(e) =>
                 setNewAddress((s) => ({ ...s, alternateNumber: e.target.value }))
               }
             />
 
-            <select
-              className="p-2 border rounded w-full"
+            <Select
               value={newAddress.active}
-              onChange={(e) =>
-                setNewAddress((s) => ({
-                  ...s,
-                  active: e.target.value === "true",
-                }))
+              onChange={(value) =>
+                setNewAddress((s) => ({ ...s, active: value }))
               }
-            >
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
-            </select>
+              options={[
+                { value: true, label: "Active" },
+                { value: false, label: "Inactive" },
+              ]}
+            />
+
           </div>
+
         </Modal>
       </div>
     </div>

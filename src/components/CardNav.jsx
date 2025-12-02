@@ -226,7 +226,7 @@ const CardNav = ({
                 >
                   {user_info?.profilePicture ? (
                     <Image
-                      src={user_info.profilePicture}
+                      src={user_info.profilePicture || "profile image"}
                       width={30}
                       height={30}
                       alt={user_info.name || "User"}
