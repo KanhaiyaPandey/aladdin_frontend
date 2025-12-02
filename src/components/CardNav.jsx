@@ -4,17 +4,17 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaCartShopping } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
-import { authFetch, gooogleOAuthFetch } from "@/utils/helpers";
+import { authFetch } from "@/utils/helpers";
 import Image from "next/image";
 import LoadingSpinner from "./LoadingSpinner";
 import { Badge } from "antd";
 import { BsCart2 } from "react-icons/bs";
 
-
 const CardNav = ({
   items,
   user_info,
   loading,
+  cart = [],
   className = "",
   ease = "power3.out",
   menuColor,
@@ -210,14 +210,17 @@ const CardNav = ({
           </div>
 
           <div className="card-nav-cta-button hidden lg:flex gap-5 text-center items-center rounded-[calc(0.75rem-0.2rem)] px-4 h-full font-medium transition-colors duration-300">
-   
             {/* Fixed-width container for loading/profile/login (prevents shift) */}
             <div
               className="w-[30px] h-[30px] flex items-center justify-center rounded-full overflow-hidden"
               style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
             >
               {loading ? (
-                <LoadingSpinner variant="ring" size={30} className="text-blue-600" />
+                <LoadingSpinner
+                  variant="ring"
+                  size={30}
+                  className="text-blue-600"
+                />
               ) : user_info ? (
                 <Link
                   href="/account"
@@ -255,10 +258,14 @@ const CardNav = ({
               style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
             >
               <span>
-               
-                    <Badge count={user_info?.cartItems?.length || 0} size="small" offset={[0, 0]} showZero>
-                       <BsCart2 size={22} />
-                  </Badge>
+                <Badge
+                  count={cart?.length || 0}
+                  size="small"
+                  offset={[0, 0]}
+                  showZero
+                >
+                  <BsCart2 size={22} />
+                </Badge>
               </span>
             </Link>
           </div>
@@ -272,61 +279,77 @@ const CardNav = ({
           } md:flex-row md:items-end md:gap-[12px]`}
           aria-hidden={!isExpanded}
         >
-          
-            <div className="nav-card select-none border backdrop-blur-md  relative flex flex-col gap-2 p-[12px_16px] rounded-[calc(0.75rem-0.2rem)] min-w-0 flex-[1_1_auto] h-auto min-h-[60px] md:h-full md:min-h-0 md:flex-[1_1_0%]"
-              ref={setCardRef(0)} >
+          <div
+            className="nav-card select-none border backdrop-blur-md  relative flex flex-col gap-2 p-[12px_16px] rounded-[calc(0.75rem-0.2rem)] min-w-0 flex-[1_1_auto] h-auto min-h-[60px] md:h-full md:min-h-0 md:flex-[1_1_0%]"
+            ref={setCardRef(0)}
+          >
             <div className="nav-card-label font-normal tracking-[-0.5px] text-[18px] md:text-[22px]">
-                Categories
-              </div>
-              <div className="nav-card-links mt-auto flex flex-col gap-[2px]">
-               
-
-                   {categories.map((category) => 
-                    <Link
-                      key={category?.categoryId}
-                      href={`/category/${category?.slug}`}
-                      className="nav-card-link text-sm md:text-base capitalize py-1 hover:opacity-70 transition-opacity duration-200"
-                    >
-                      {category?.title}
-                    </Link>
-                  )}
-          
-            
-              </div>
+              Categories
             </div>
+            <div className="nav-card-links mt-auto flex flex-col gap-[2px]">
+              {categories.map((category) => (
+                <Link
+                  key={category?.categoryId}
+                  href={`/category/${category?.slug}`}
+                  className="nav-card-link text-sm md:text-base capitalize py-1 hover:opacity-70 transition-opacity duration-200"
+                >
+                  {category?.title}
+                </Link>
+              ))}
+            </div>
+          </div>
 
-            {/* account */}
-            <div className="nav-card select-none border backdrop-blur-md  relative flex flex-col gap-2 p-[12px_16px] rounded-[calc(0.75rem-0.2rem)] min-w-0 flex-[1_1_auto] h-auto min-h-[60px] md:h-full md:min-h-0 md:flex-[1_1_0%]" ref={setCardRef(1)} >
-              <div className="nav-card-label font-normal tracking-[-0.5px] text-[18px] md:text-[22px]">
-                Account
-              </div>
+          {/* account */}
+          <div
+            className="nav-card select-none border backdrop-blur-md  relative flex flex-col gap-2 p-[12px_16px] rounded-[calc(0.75rem-0.2rem)] min-w-0 flex-[1_1_auto] h-auto min-h-[60px] md:h-full md:min-h-0 md:flex-[1_1_0%]"
+            ref={setCardRef(1)}
+          >
+            <div className="nav-card-label font-normal tracking-[-0.5px] text-[18px] md:text-[22px]">
+              Account
+            </div>
 
             <div className="nav-card-links mt-auto flex flex-col gap-[2px]">
-                {user_info ? (
-                  <>
-                    <Link
-                      href="/account"
-                      className="nav-card-link text-sm md:text-base py-1 hover:opacity-70 transition-opacity duration-200"
-                    >
-                      Profile
-                    </Link>
-                    <Link
-                      href="/logout"
-                      className="nav-card-link text-sm md:text-base py-1 hover:opacity-70 transition-opacity duration-200"
-                    >
-                      Logout
-                    </Link>
-                  </>
-                ) : (
+              {user_info ? (
+                <>
                   <Link
-                    href={process.env.NEXT_PUBLIC_PRODUCTION_OAUTH_REDIRECT_URI || 'https://aladdin-0kuf.onrender.com/login/oauth2/code/google'}
+                    href="/account"
                     className="nav-card-link text-sm md:text-base py-1 hover:opacity-70 transition-opacity duration-200"
                   >
-                    Login / Sign Up
+                    Profile
                   </Link>
-                )}
-              </div>
+                  <button
+                    onClick={async () => {
+                      try {
+                        await authFetch.post("/logout");
+                        localStorage.removeItem("user_data");
+                        localStorage.removeItem("guest_cart");
+                        window.location.href = "/";
+                      } catch (error) {
+                        console.error("Logout error:", error);
+                        // Clear local storage anyway
+                        localStorage.removeItem("user_data");
+                        localStorage.removeItem("guest_cart");
+                        window.location.href = "/";
+                      }
+                    }}
+                    className="nav-card-link text-sm md:text-base py-1 hover:opacity-70 transition-opacity duration-200 text-left w-full"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <a
+                  href={`${
+                    process.env.NEXT_PUBLIC_PRODUCTION_URL ||
+                    "http://localhost:8080"
+                  }/oauth2/authorization/google`}
+                  className="nav-card-link text-sm md:text-base py-1 hover:opacity-70 transition-opacity duration-200"
+                >
+                  Login / Sign Up
+                </a>
+              )}
             </div>
+          </div>
         </div>
       </nav>
     </div>

@@ -1,13 +1,10 @@
 import AccountPageClient from "./AccountPageClient";
+import ProtectedAccountPage from "./ProtectedAccountPage";
 
-export default async function acountPage() {
-// const user_info = await getUserInfo(); 
-//   if (!user_info) {
-//     redirect("/login");
-//   }
+export default async function AccountPage() {
   return (
-    <div className=" w-full flex items-center justify-center">
-      <AccountPageClient />
+    <div className="w-full flex items-center justify-center">
+      <ProtectedAccountPage />
     </div>
-  )
+  );
 }

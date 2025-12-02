@@ -48,14 +48,12 @@ const Login = () => {
         <div className=' flex flex-col gap-2 w-full mt-16 font-slussen'>
            <h1 className=' font-light'>Access with</h1>
            <span className=' text-[10px] text-gray-500'>By logging in with my social login, I agree to link my account in accordance with the Privacy Policy</span>
-               <button 
-                 onClick={() => {
-                    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user/google/login?redirectTo=${redirectTo}`;
-                  }}
-               className=' border font-light  p-2 text-xs text-gray-700  gap-2 rounded-md  transition-all flex items-center justify-center duration-300 ease-in-out uppercase'>
+               <a 
+                 href={`${process.env.NEXT_PUBLIC_PRODUCTION_URL || 'http://localhost:8080'}/oauth2/authorization/google`}
+               className=' border font-light  p-2 text-xs text-gray-700  gap-2 rounded-md  transition-all flex items-center justify-center duration-300 ease-in-out uppercase hover:bg-gray-50'>
                 <FcGoogle size={18}/>
                  <span>Continue with google</span>
-                </button>
+                </a>
 
              <button className=' border font-light text-gray-700  p-2 text-xs  gap-2 rounded-md  transition-all flex items-center justify-center duration-300 ease-in-out uppercase'>
                 <FaApple size={18}/>

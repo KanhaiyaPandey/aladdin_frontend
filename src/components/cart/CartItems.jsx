@@ -21,40 +21,62 @@ const CartItems = () => {
 
   const updateCart = async (updatedCart) => {
     try {
-      await customerFetch.put("/update-cart", updatedCart);
-      const updatedUserInfo = { ...user_info, cartItems: updatedCart };
-      if(!user_info) {
-          localStorage.setItem("guest_cart",JSON.stringify(updatedCart))
-      } 
+      if (user_info) {
+        // User is authenticated - update on server
+        await customerFetch.put("/update-cart", updatedCart);
+        const updatedUserInfo = { ...user_info, cartItems: updatedCart };
+        setUserInfo(updatedUserInfo);
+      } else {
+        // Guest user - store in localStorage
+        localStorage.setItem("guest_cart", JSON.stringify(updatedCart));
+      }
       setCart(updatedCart);
-      setUserInfo(updatedUserInfo);
     } catch (err) {
       message.error("Something went wrong updating the cart.");
+      throw err;
     }
   };
 
   const handleRemoveItem = async (index) => {
     setLoadingIndex(index);
-    const updatedCart = user_info.cartItems.filter((_, i) => i !== index);
-    await updateCart(updatedCart);
-    setLoadingIndex(null);
+    try {
+      const currentCart = user_info?.cartItems || cart || [];
+      const updatedCart = currentCart.filter((_, i) => i !== index);
+      await updateCart(updatedCart);
+    } catch (err) {
+      message.error("Failed to remove item from cart.");
+    } finally {
+      setLoadingIndex(null);
+    }
   };
 
   const increaseQty = async (index) => {
     setLoadingIndex(index);
-    const updatedCart = [...user_info.cartItems];
-    updatedCart[index].quantity += 1;
-    await updateCart(updatedCart);
-    setLoadingIndex(null);
+    try {
+      const currentCart = user_info?.cartItems || cart || [];
+      const updatedCart = [...currentCart];
+      updatedCart[index].quantity += 1;
+      await updateCart(updatedCart);
+    } catch (err) {
+      message.error("Failed to update quantity.");
+    } finally {
+      setLoadingIndex(null);
+    }
   };
 
   const decreaseQty = async (index) => {
-    if (user_info.cartItems[index].quantity <= 1) return;
+    const currentCart = user_info?.cartItems || cart || [];
+    if (currentCart[index]?.quantity <= 1) return;
     setLoadingIndex(index);
-    const updatedCart = [...user_info.cartItems];
-    updatedCart[index].quantity -= 1;
-    await updateCart(updatedCart);
-    setLoadingIndex(null);
+    try {
+      const updatedCart = [...currentCart];
+      updatedCart[index].quantity -= 1;
+      await updateCart(updatedCart);
+    } catch (err) {
+      message.error("Failed to update quantity.");
+    } finally {
+      setLoadingIndex(null);
+    }
   };
 
   return (
@@ -64,7 +86,16 @@ const CartItems = () => {
         <span className=" text-xs">Your Selections</span>
        </div>
 
-      {cart.map((item, index) => (
+      {(!cart || cart.length === 0) && (
+        <div className="w-full text-center py-8">
+          <h1 className="text-gray-500">No Items in Cart</h1>
+          <p className="text-sm text-gray-400 mt-2">
+            {!user_info && "Please login to save your cart items"}
+          </p>
+        </div>
+      )}
+
+      {cart && cart.length > 0 && cart.map((item, index) => (
         <div key={index} className="w-full p-3 flex gap-3 border-b border-gray-400">
           
           {/* IMAGE ONLY → CLICKABLE */}
@@ -178,10 +209,6 @@ const CartItems = () => {
           </div>
         </div>
       ))}
-
-      {cart.length === 0 && 
-         <h1>No Items</h1>
-       }
     </div>
   );
 };

@@ -25,18 +25,42 @@ export default function LayoutClient({ categories, children }) {
   const pathname = usePathname();
   const hideNav = pathname.startsWith("/auth");
 
+  // Initialize cart from localStorage for guest users
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const guestCart = JSON.parse(localStorage.getItem("guest_cart") || "[]");
+      if (guestCart.length > 0 && !user_info) {
+        setCart(guestCart);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       setLoading(true);
       try {
         const response = await authFetch.get("/validate-token");
         const userData = response?.data?.data || null;
-        setUserInfo(userData);
-        setCart(userData.cartItems);
-        await mergeCart(userData);
+        if (userData) {
+          setUserInfo(userData);
+          setCart(userData.cartItems || []);
+          await mergeCart(userData);
+        } else {
+          setUserInfo(null);
+          // Load guest cart if no user
+          if (typeof window !== "undefined") {
+            const guestCart = JSON.parse(localStorage.getItem("guest_cart") || "[]");
+            setCart(guestCart);
+          }
+        }
       } catch (error) {
         console.error("Error fetching user info:", error);
         setUserInfo(null);
+        // Load guest cart on error
+        if (typeof window !== "undefined") {
+          const guestCart = JSON.parse(localStorage.getItem("guest_cart") || "[]");
+          setCart(guestCart);
+        }
       } finally {
         setLoading(false);
       }
@@ -46,9 +70,13 @@ export default function LayoutClient({ categories, children }) {
 
 const mergeCart = async (user) => {
   if (!user) return;
+  if (typeof window === "undefined") return;
+  
   const localCart = JSON.parse(localStorage.getItem("guest_cart") || "[]");
   const serverCart = user.cartItems || [];
+  
   if (localCart.length === 0) return; // nothing to merge
+  
   const merged = [...serverCart];
   localCart.forEach((localItem) => {
     const existingIndex = merged.findIndex(
@@ -62,8 +90,8 @@ const mergeCart = async (user) => {
       merged.push(localItem);
     }
   });
+  
   setCart(merged);
-  localStorage.setItem("guest_cart", []);
   try {
     await customerFetch.put("/update-cart", merged);
     const updatedUser = { ...user, cartItems: merged };
@@ -71,6 +99,8 @@ const mergeCart = async (user) => {
     localStorage.removeItem("guest_cart");
   } catch (e) {
     console.error("Error merging cart:", e);
+    // Keep merged cart in state even if API call fails
+    setCart(merged);
   }
 };
 
@@ -115,6 +145,7 @@ const mergeCart = async (user) => {
               <CardNav
                 user_info={user_info}
                 loading={loading}
+                cart={cart}
                 categories={categories}
               />
             </div>

@@ -73,15 +73,25 @@ const CartDrawer = () => {
 
   const handleRemoveItem = async (index) => {
     setLoadingIndex(index);
-    const updatedCart = user_info.cartItems.filter((_, i) => i !== index);
-    const updatedUserInfo = { ...user_info, cartItems: updatedCart };
     try {
-        const response = await customerFetch.put("/update-cart", updatedCart)
-         setUserInfo(updatedUserInfo);
-         setCart(updatedCart);
-         setLoadingIndex(null);
+      const currentCart = user_info?.cartItems || cart || [];
+      const updatedCart = currentCart.filter((_, i) => i !== index);
+      
+      if (user_info) {
+        // User is authenticated - update on server
+        await customerFetch.put("/update-cart", updatedCart);
+        const updatedUserInfo = { ...user_info, cartItems: updatedCart };
+        setUserInfo(updatedUserInfo);
+      } else {
+        // Guest user - store in localStorage
+        localStorage.setItem("guest_cart", JSON.stringify(updatedCart));
+      }
+      
+      setCart(updatedCart);
     } catch (error) {
-        message.error("Failed to remove item from cart.");
+      message.error("Failed to remove item from cart.");
+    } finally {
+      setLoadingIndex(null);
     }
   }
 
