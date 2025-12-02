@@ -1,15 +1,13 @@
 'use client'
 
-import React from 'react'
+import React, { Suspense } from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { authFetch } from '@/utils/helpers';
 
-
-
-const Login = () => {
+const LoginContent = () => {
     const params = useSearchParams();
     const redirectTo = params.get("redirectTo") || "/";
 
@@ -64,9 +62,27 @@ const Login = () => {
 
 
         
-
+        
     </div>
   )
+}
+
+const Login = () => {
+  return (
+    <Suspense fallback={
+      <div className='md:w-1/2 w-full p-5 flex flex-col h-full items-center justify-center'>
+        <div className='flex flex-col w-full gap-2'>
+          <Link href={'/'} className='text-6xl font-bold font-font-lobster'>ALADDIN</Link>
+          <span className='mt-2'>LOG IN</span>
+          <div className='mt-10 text-center'>
+            <p className='text-gray-500'>Loading...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
+  );
 }
 
 export default Login

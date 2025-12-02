@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { authFetch } from "@/utils/helpers";
 import LoadingScreen from "@/components/LoadingScreen";
 import { useUser } from "@/context/UserContext";
 
 /**
- * OAuth Callback Page
- * Handles OAuth redirect from Google and fetches user data
+ * OAuth Callback Component (uses useSearchParams)
  */
-export default function OAuthCallback() {
+function OAuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const userContext = useUser();
@@ -119,6 +118,28 @@ export default function OAuthCallback() {
         <p className="text-gray-600">Authentication failed. Redirecting to login...</p>
       </div>
     </div>
+  );
+}
+
+/**
+ * OAuth Callback Page
+ * Handles OAuth redirect from Google and fetches user data
+ * Wrapped in Suspense for useSearchParams
+ */
+export default function OAuthCallback() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <LoadingScreen />
+          <div className="absolute bottom-20 text-center">
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <OAuthCallbackContent />
+    </Suspense>
   );
 }
 
