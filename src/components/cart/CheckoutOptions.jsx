@@ -1,11 +1,13 @@
 import { useUser } from "@/context/UserContext"
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import CheckoutModal from "../checkout/CheckoutModal";
 
 
 const CheckoutOptions = () => {
 
   const {user_info, setUserInfo, cart, setCart} = useUser();
+  const [open, setOpen] = useState(false);
   const [subTotal, setSubTotal] = useState("");
   const router = useRouter();
 
@@ -20,10 +22,11 @@ const CheckoutOptions = () => {
 
     const handleCheckout = () => {
          if(!user_info){
-            router.push("/auth/login?redirectTo=/checkout");
+            router.push("/auth/login?redirectTo=/cart");
             return;
-         }
-          router.push("/checkout");
+         }else{
+            setOpen(true);
+         }   
     }
 
   return (
@@ -89,6 +92,8 @@ const CheckoutOptions = () => {
         <button onClick={handleCheckout} disabled={cart.length === 0} className="w-full bg-black text-white py-3 mt-8 rounded-sm tracking-widest text-xs">
           CHECKOUT
         </button>
+
+        <CheckoutModal open={open} setOpen={setOpen}/>
 
     </div>
 

@@ -19,7 +19,7 @@ const LoadingScreen = () => {
       </motion.div>
 
       <motion.div
-        className="mt-6 w-32 h-1 bg-gray-600 rounded overflow-hidden"
+        className="mt-6 w-40 h-1 bg-gray-600 rounded overflow-hidden"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{
