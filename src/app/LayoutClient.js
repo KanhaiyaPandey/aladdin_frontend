@@ -105,6 +105,14 @@ const mergeCart = async (user) => {
 };
 
 
+  const handleUpdateUser = async (user) => {
+      const response = await customerFetch.put("/update-profile", updatedUser);
+      return(response.data.data);
+  };
+
+
+
+
   useEffect(() => {
     if (isPending) {
       NProgress.start();
@@ -136,7 +144,7 @@ const mergeCart = async (user) => {
   }, [router]);
 
   return (
-    <UserContext.Provider value={{ user_info, setUserInfo,cart,setCart,loading, drawerOpen, setDrawerOpen }}>
+    <UserContext.Provider value={{ user_info, setUserInfo,cart,setCart,loading, drawerOpen, setDrawerOpen, handleUpdateUser }}>
       <div className="relative w-full min-h-screen flex flex-col font-michroma">
         {showLoadingScreen && <LoadingScreen />}
          <div className={`${hideNav ? "hidden" : ""} sticky top-0 w-full z-50`}>
