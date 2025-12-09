@@ -49,6 +49,9 @@ const CheckoutModal = ({ open, setOpen }) => {
             productId: item.productId,
             variantId: item?.variantId || null,
             quantity: item.quantity,
+            title: item.title,
+            attributes:item.attributes,
+            options: item.options,
             media: item.image,
           })),
           paymentMethod: "RAZORPAY",
@@ -148,8 +151,12 @@ const CheckoutModal = ({ open, setOpen }) => {
         const orderPayload = {
           items: cart.map((item) => ({
             productId: item.productId,
+            media:item?.productMedias[0]?.url,
+            title:item.title,
             variantId: item?.variantId || null,
             quantity: item.quantity,
+            attributes:item.attributes,
+            options: item.options,
             media: item.image,
           })),
           paymentMethod: "CASH_ON_DELIVERY",

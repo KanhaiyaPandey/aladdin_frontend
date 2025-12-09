@@ -110,11 +110,19 @@ const ProductDetails = ({ selectedVariant, product, onSelectVariant }) => {
           <h1 className=" sm:text-xl md:text-2xl font-medium uppercase">
             {product?.title}
           </h1>
-              <h2 className="font-semibold text-sm md:text-lg">
-                ₹{Number(selectedVariant.sellPrice).toLocaleString("en-IN", {
-                   minimumFractionDigits: 2,
-                 })}
-              </h2>
+
+          <div className=" flex items-center gap-1">
+                <p className="  line-through">
+                            ₹{Number(selectedVariant.compareAtPrice).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                  })}
+              </p>
+                <h2 className="font-semibold text-sm md:text-lg text-green-600">
+                  ₹{Number(selectedVariant.sellPrice).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                  })}
+                </h2>
+          </div>
               <span className="text-xs text-gray-600">
                 MRP inclusive of all taxes
               </span>

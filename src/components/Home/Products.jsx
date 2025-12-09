@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import ProductCarousel from "../products/ProductCarousel";
 
 const Products = ({ fadeInVariant, categories, products = [] }) => {
+  console.log("products: ",products);
+  
   return (
     <section
       className="px-6 py-12 w-full"

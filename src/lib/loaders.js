@@ -43,6 +43,8 @@ export const getProducts = async (limit = 20) => {
   return getCachedData(`products_${limit}`, async () => {
     const response = await publicFetch.get('/product/all-products');
     const products = response.data.data || [];
+    console.log("at loader", products);
+    
     return products.slice(0, limit);
   });
 };

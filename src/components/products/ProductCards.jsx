@@ -45,7 +45,7 @@ const ProductCards = ({
             >
               <Image
                 src={currentImg}
-                alt={product.productName || "product image"}
+                alt={product?.productName || "product image"}
                 fill
                 className="object-cover"
                 unoptimized

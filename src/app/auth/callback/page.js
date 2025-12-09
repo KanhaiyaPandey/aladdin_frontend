@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { authFetch } from "@/utils/helpers";
+import { authFetch, customerFetch } from "@/utils/helpers";
 import LoadingScreen from "@/components/LoadingScreen";
 import { useUser } from "@/context/UserContext";
 
@@ -19,7 +19,7 @@ function OAuthCallbackContent() {
     const handleOAuthCallback = async () => {
       try {
         // Validate token and get user data
-        const response = await authFetch.get("/validate-token");
+        const response = await customerFetch.get("/validate-token");
         const userData = response?.data?.data || null;
 
         if (userData) {
