@@ -1,6 +1,12 @@
+import { publicFetch } from "@/utils/helpers";
 import Image from "next/image";
 
 const Hero = () => {
+
+  const handleTest = async () =>{
+    const response = await publicFetch.get('/product/all-products');
+  }
+
   return (
     <section className="relative text-center h-[500px] sm:h-[700px]">
         {/* Background Image */}
@@ -18,7 +24,7 @@ const Hero = () => {
             In the right outfit<br /> anything is possible
             </h1>
             <div className="mt-6 flex justify-center gap-4 text-xs">
-            <button className="bg-white text-black px-6 py-2 rounded-full cursor-pointer">Collections</button>
+            <button className="bg-white text-black px-6 py-2 rounded-full cursor-pointer" onClick={() => handleTest()}>Collections</button>
             <button className="border border-white px-6 py-2 rounded-full cursor-pointer">Shop Now</button>
             </div>
         </div>
