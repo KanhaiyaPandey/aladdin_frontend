@@ -81,8 +81,7 @@ export default function ProductPageClient({
           </div>
         </div>
       </div>
-
-      <div className=" w-full mt-10 grid p-4 gap-4">
+      {/* <div className=" w-full mt-10 grid p-4 gap-4">
        { product?.upSellProducts?.length > 0 && <div className="flex items-center border-b py-1 w-full justify-start">
            <p className="text-center font-semibold text-2xl">Style With</p>
         </div>}
@@ -167,7 +166,7 @@ export default function ProductPageClient({
 
         
        
-      </div>
+      </div> */}
     </div>
   );
 }

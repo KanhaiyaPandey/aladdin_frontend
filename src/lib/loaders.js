@@ -1,8 +1,9 @@
 import { publicFetch } from '../utils/helpers';
 
+
 // Cache for API responses
 const cache = new Map();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION = 1 * 60 * 1000; // 1 minutes
 
 // Helper function to check if cache is valid
 const isCacheValid = (key) => {
@@ -42,9 +43,7 @@ export const getCategories = async () => {
 export const getProducts = async (limit = 20) => {
   return getCachedData(`products_${limit}`, async () => {
     const response = await publicFetch.get('/product/all-products');
-    const products = response.data.data || [];
-    console.log("at loader", products);
-    
+    const products = response.data.data || [];        
     return products.slice(0, limit);
   });
 };
@@ -93,8 +92,8 @@ export const getProducts = async (limit = 20) => {
 export const getProduct = async (productId) => {
   return getCachedData(`product_${productId}`, async () => {
     const response = await publicFetch.get(`/product/${productId}`);
-    const user_info = response.data.data || null;
-    return user_info;
+    const product = response.data.data || null;
+    return product;
   });
 };
 
@@ -102,7 +101,7 @@ export const getProduct = async (productId) => {
 export const getHomepageData = async () => {
   return getCachedData('homepage', async () => {
     try {
-      const [categories, products, user_info] = await Promise.all([
+      const [categories, products] = await Promise.all([
         getCategories(),
         getProducts(20),
       ]);
