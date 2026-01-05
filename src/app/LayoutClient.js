@@ -39,7 +39,7 @@ export default function LayoutClient({ categories, children }) {
     const fetchUserInfo = async () => {
       setLoading(true);
       try {
-        const response = await customerFetch.get("/validate-token");
+        const response = await authFetch.get("/validate-token");
         const userData = response?.data?.data || null;
         if (userData) {
           setUserInfo(userData);

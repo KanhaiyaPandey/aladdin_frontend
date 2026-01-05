@@ -19,7 +19,7 @@ function OAuthCallbackContent() {
     const handleOAuthCallback = async () => {
       try {
         // Validate token and get user data
-        const response = await customerFetch.get("/validate-token");
+        const response = await authFetch.get("/validate-token");
         const userData = response?.data?.data || null;
 
         if (userData) {
